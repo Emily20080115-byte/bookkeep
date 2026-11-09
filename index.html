@@ -122,12 +122,29 @@
   .cats button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0; border-radius: 14px; font-size: 12px; background: #fff; border: 2px solid transparent; }
   .cats button em { font-style: normal; font-size: 22px; }
   .cats button.on { border-color: var(--orange); background: #FDF0E3; }
-  .field { display: flex; gap: 8px; margin-bottom: 10px; }
-  .field input { flex: 1; min-width: 0; border: 2px solid var(--blue-soft); background: #fff; border-radius: 14px; padding: 12px 14px; font: inherit; color: var(--ink); outline: 0; }
-  .field input[type=date] { flex: 0 0 150px; }
-  .actions { display: flex; gap: 10px; margin-top: 6px; }
-  .save { flex: 1; background: var(--line); color: #fff; border-radius: 16px; padding: 15px; font-weight: 700; font-size: 16px; }
-  .del { background: #F6DED6; color: var(--expense); border-radius: 16px; padding: 15px 18px; font-weight: 600; }
+  /* 金額顯示（算式＋結果） */
+  .amount { flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px; min-height: 76px; justify-content: center; }
+  .amount .expr { text-align: right; font-size: 15px; color: var(--muted); min-height: 20px; word-break: break-all; }
+  .amount .res { display: flex; align-items: baseline; justify-content: space-between; }
+  .amount .res span { font-size: 20px; color: var(--muted); }
+  .amount .res b { font-size: 34px; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; word-break: break-all; text-align: right; }
+
+  /* 左：計算機　右：文字 */
+  .split { display: flex; gap: 10px; align-items: stretch; }
+  .pad { flex: 0 0 62%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .pad button { height: 48px; border-radius: 24px; background: #fff; font-size: 21px; font-weight: 500; color: var(--ink);
+    box-shadow: 0 1px 3px rgba(62,90,140,.12); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+  .pad button.fn { background: var(--blue-soft); color: var(--line); font-size: 17px; }
+  .pad button.op { background: var(--orange); color: #fff; font-size: 24px; }
+  .pad button:active { filter: brightness(.9); transform: scale(.96); }
+  .side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+  .side textarea, .side input { width: 100%; border: 2px solid var(--blue-soft); background: #fff; border-radius: 14px;
+    padding: 10px 12px; font: inherit; font-size: 15px; color: var(--ink); outline: 0; }
+  .side textarea { flex: 1; min-height: 90px; resize: none; }
+  .side input[type=date] { padding: 9px 8px; font-size: 14px; min-height: 44px; }
+  .side textarea:focus, .side input:focus { border-color: var(--blue); }
+  .save { background: var(--line); color: #fff; border-radius: 16px; padding: 13px 6px; font-weight: 700; font-size: 16px; }
+  .del { background: #F6DED6; color: var(--expense); border-radius: 14px; padding: 9px 6px; font-weight: 600; font-size: 14px; }
 
   .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
     padding: 6px; z-index: 30; display: none; min-width: 150px; }
@@ -192,15 +209,32 @@
       <button data-t="out" class="on">支出</button>
       <button data-t="in">收入</button>
     </div>
-    <div class="amount"><span>$</span><input id="amt" type="number" inputmode="decimal" placeholder="0" min="0" step="any"></div>
-    <div class="cats" id="cats"></div>
-    <div class="field">
-      <input id="date" type="date">
-      <input id="note" type="text" placeholder="備註（可不填）" maxlength="40">
+    <div class="amount">
+      <div class="expr" id="expr"></div>
+      <div class="res"><span>$</span><b id="amt">0</b></div>
     </div>
-    <div class="actions">
-      <button class="del" id="delBtn" hidden>刪除</button>
-      <button class="save" id="saveBtn">存進錢包</button>
+    <div class="cats" id="cats"></div>
+    <div class="split">
+      <div class="pad" id="pad">
+        <button class="fn" data-k="back" aria-label="退格">⌫</button>
+        <button class="fn" data-k="AC">AC</button>
+        <button class="fn" data-k="%">%</button>
+        <button class="op" data-k="÷">÷</button>
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+        <button class="op" data-k="×">×</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+        <button class="op" data-k="−">−</button>
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+        <button class="op" data-k="+">+</button>
+        <button data-k="00">00</button><button data-k="0">0</button><button data-k=".">.</button>
+        <button class="op" data-k="=">=</button>
+      </div>
+      <div class="side">
+        <textarea id="note" placeholder="寫點備註…&#10;例如：和朋友吃火鍋" maxlength="60"></textarea>
+        <input id="date" type="date">
+        <button class="del" id="delBtn" hidden>刪除</button>
+        <button class="save" id="saveBtn">存進錢包</button>
+      </div>
     </div>
   </div>
 </div>
@@ -275,19 +309,69 @@ function renderCats() {
   document.querySelectorAll("#seg button").forEach((b) => b.classList.toggle("on", b.dataset.t === form.type));
 }
 
+// ── 計算機 ──
+let expr = "";
+const OPS = "+−×÷";
+
+function calc(s) {
+  // 依先乘除後加減計算，不使用 eval
+  const toks = s.match(/\d*\.?\d+|\d+\.|[+−×÷]/g);
+  if (!toks) return 0;
+  while (toks.length && OPS.includes(toks[toks.length - 1])) toks.pop();
+  if (!toks.length) return 0;
+  const terms = [parseFloat(toks[0])];
+  for (let i = 1; i < toks.length; i += 2) {
+    const op = toks[i], n = parseFloat(toks[i + 1]);
+    if (op === "×") terms.push(terms.pop() * n);
+    else if (op === "÷") terms.push(n === 0 ? NaN : terms.pop() / n);
+    else terms.push(op === "+" ? n : -n);
+  }
+  const v = terms.reduce((a, b) => a + b, 0);
+  return Math.round(v * 100) / 100;
+}
+const fmt = (n) => isFinite(n) ? n.toLocaleString("zh-TW", { maximumFractionDigits: 2 }) : "錯誤";
+
+function showExpr() {
+  const hasOp = /[+−×÷]/.test(expr.slice(1));
+  $("expr").textContent = hasOp ? expr : "";
+  $("amt").textContent = expr ? fmt(calc(expr)) : "0";
+}
+
+function press(k) {
+  const last = expr.slice(-1);
+  const curNum = expr.split(/[+−×÷]/).pop();
+  if (k === "AC") expr = "";
+  else if (k === "back") expr = expr.slice(0, -1);
+  else if (k === "=") { const v = calc(expr); expr = isFinite(v) && v !== 0 ? String(v) : ""; }
+  else if (k === "%") { if (curNum) expr = expr.slice(0, -curNum.length) + String(Math.round(parseFloat(curNum) / 100 * 10000) / 10000); }
+  else if (OPS.includes(k)) {
+    if (!expr) return;
+    expr = OPS.includes(last) ? expr.slice(0, -1) + k : expr + k;
+  }
+  else if (k === ".") { if (!curNum.includes(".")) expr += curNum ? "." : "0."; }
+  else { // 數字
+    if (curNum.includes(".") && curNum.split(".")[1].length >= 2) return;
+    if (curNum === "0") expr = expr.slice(0, -1);
+    if (curNum.replace(".", "").length >= 9) return;
+    expr += (k === "00" && !curNum) ? "0" : k;
+  }
+  showExpr();
+}
+$("pad").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { press(b.dataset.k); if (navigator.vibrate) navigator.vibrate(8); } });
+
 function openSheet(rec) {
   if (rec) {
     form = { type: rec.type, cat: rec.cat, id: rec.id };
-    $("amt").value = rec.amount; $("date").value = rec.date; $("note").value = rec.note || "";
+    expr = String(rec.amount); $("date").value = rec.date; $("note").value = rec.note || "";
   } else {
     form = { type: "out", cat: CATS.out[0][1], id: null };
-    $("amt").value = ""; $("date").value = today(); $("note").value = "";
+    expr = ""; $("date").value = today(); $("note").value = "";
   }
+  showExpr();
   $("delBtn").hidden = !rec;
   $("saveBtn").textContent = rec ? "更新" : "存進錢包";
   renderCats();
   $("sheetWrap").classList.add("open");
-  if (!rec) setTimeout(() => $("amt").focus(), 250);
 }
 function closeSheet() { $("sheetWrap").classList.remove("open"); document.activeElement.blur(); }
 
@@ -298,8 +382,9 @@ $("cats").onclick = (e) => { const b = e.target.closest("button"); if (!b) retur
 $("list").onclick = (e) => { const b = e.target.closest(".item"); if (b) openSheet(records.find((r) => r.id === b.dataset.id)); };
 
 $("saveBtn").onclick = () => {
-  const amount = parseFloat($("amt").value);
-  if (!(amount > 0)) { toast("請輸入金額"); $("amt").focus(); return; }
+  const amount = calc(expr);
+  if (!isFinite(amount)) { toast("算式有誤，不能除以 0"); return; }
+  if (!(amount > 0)) { toast("請輸入金額"); return; }
   const data = { type: form.type, cat: form.cat, amount, date: $("date").value || today(), note: $("note").value.trim() };
   if (form.id) Object.assign(records.find((r) => r.id === form.id), data);
   else records.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ts: Date.now(), ...data });

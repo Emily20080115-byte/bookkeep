@@ -1,5 +1,5 @@
 // 離線快取：沒網路也能打開記帳
-const CACHE = "wallet-v1";
+const CACHE = "wallet-v2";
 const FILES = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
 
 self.addEventListener("install", (e) => {
@@ -15,5 +15,11 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
+  // 先抓最新版，沒網路才用快取
+  if (e.request.method !== "GET") return;
+  e.respondWith(
+    fetch(e.request)
+      .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); return res; })
+      .catch(() => caches.match(e.request))
+  );
 });
