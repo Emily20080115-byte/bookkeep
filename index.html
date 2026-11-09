@@ -215,6 +215,53 @@
   .drow .d { color: var(--muted); width: 44px; flex: none; }
   .drow .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .drow .a { font-variant-numeric: tabular-nums; }
+
+  /* ── 主畫面（新版） ── */
+  .mbar { position: relative; display: flex; align-items: center; justify-content: space-between; height: 58px;
+    margin: 0 -16px; padding: 0 12px; border-bottom: 1px solid #ECE5D8; }
+  .mbar .lg { display: flex; align-items: center; gap: 8px; }
+  .tb2 { width: 42px; height: 42px; display: grid; place-items: center; color: var(--ink); }
+  .tb2 svg { width: 26px; height: 26px; }
+  .streak { display: flex; align-items: center; gap: 3px; background: #F1ECE2; border-radius: 16px; padding: 5px 10px 5px 7px;
+    font-weight: 700; font-size: 15px; }
+  .streak svg { width: 18px; height: 18px; color: var(--orange-deep); }
+  .mpick { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px;
+    font-weight: 700; font-size: 19px; white-space: nowrap; }
+  .mpick svg { width: 14px; height: 14px; }
+  .mpick input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; -webkit-appearance: none; appearance: none; }
+  .sums { display: flex; justify-content: space-between; padding: 18px 2px 0; }
+  .sum { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+  .sum.r { align-items: flex-end; text-align: right; }
+  .sum .lbl { display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 17px; }
+  .sum .lbl span { background: linear-gradient(transparent 68%, var(--orange) 68%); padding: 0 2px; }
+  .sum.r .lbl span { background: linear-gradient(transparent 68%, var(--blue) 68%); }
+  .sum .lbl svg { width: 14px; height: 14px; }
+  .sum b { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ringbox { position: relative; width: min(64vw, 260px); margin: 16px auto 0; aspect-ratio: 1; touch-action: pan-y; }
+  .ringbox svg { width: 100%; height: 100%; display: block; }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .ring-center .cn svg { width: 24px; height: 24px; color: var(--gold); }
+  .ring-center .t { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 16px; }
+  .ring-center .t button { display: grid; place-items: center; color: var(--ink); }
+  .ring-center .t svg { width: 20px; height: 20px; }
+  .ring-center b { font-size: clamp(20px, 7vw, 28px); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ring-legend { display: flex; justify-content: center; gap: 16px; font-size: 13px; color: var(--muted); margin: 10px 0 18px; }
+  .ring-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; border: 1.5px solid var(--ink); }
+  .dcard { background: #fff; border: 2.5px solid var(--ink); border-radius: 20px; margin-bottom: 16px; overflow: hidden; }
+  .dcard .dh { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 2.5px solid var(--ink);
+    font-weight: 700; font-size: 17px; }
+  .dcard .dh .tot { color: var(--orange-deep); font-variant-numeric: tabular-nums; }
+  .dcard .dh .tot.pos { color: var(--line); }
+  .dcard .item { padding: 13px 16px; border-bottom: 1px solid #EEE8DD; }
+  .dcard .item:last-child { border-bottom: 0; }
+  .dcard .item .ic svg { width: 30px; height: 30px; }
+  .dcard .item.in .ic::before { background: var(--blue); }
+  .dcard .item .info b { font-weight: 500; font-size: 16px; }
+  .dcard .item .money { color: var(--ink); font-weight: 600; font-size: 16px; }
+  .dcard .item.in .money { color: var(--line); }
+  .fab { background: var(--orange-deep) !important; border: 2.5px solid var(--ink) !important; box-shadow: 0 4px 12px rgba(47,62,92,.25) !important;
+    color: #fff !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1; }
+  .menu.left { right: auto; left: 12px; top: 56px; }
   .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
     padding: 6px; z-index: 25; display: none; min-width: 150px; }
   .menu.show { display: block; }
@@ -234,38 +281,38 @@
 </div>
 
 <div class="wrap" style="position:relative">
-  <header>
-    <div class="brand"><img src="icons/icon-192.png" alt="">小錢包</div>
-    <div class="hdr-btns"><button class="icon-btn" id="anaBtn" aria-label="分析"></button><button class="icon-btn" id="menuBtn" aria-label="選單">⋯</button></div>
+  <header class="mbar">
+    <div class="lg">
+      <button class="tb2" id="menuBtn" aria-label="選單"></button>
+      <button class="streak" id="streak" hidden></button>
+    </div>
+    <label class="mpick"><span id="monthLabel"></span><span id="caret"></span><input type="month" id="monthInput" aria-label="選擇月份"></label>
+    <button class="tb2" id="anaBtn" aria-label="分析"></button>
   </header>
-  <div class="menu" id="menu">
+  <div class="menu left" id="menu">
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 5</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 6</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
 
-  <div class="month">
-    <button id="prev" aria-label="上個月">‹</button>
-    <span id="monthLabel"></span>
-    <button id="next" aria-label="下個月">›</button>
-  </div>
-
-  <div class="wallet">
-    <div class="clasp"></div>
-    <div class="label">本月結餘</div>
-    <div class="balance" id="balance">$0</div>
-    <div class="pocket">
-      <div><small>收入</small><b id="incomeSum">$0</b></div>
-      <div><small>支出</small><b id="expenseSum">$0</b></div>
+  <div id="swipeArea">
+    <div class="sums">
+      <button class="sum" id="goOut"><span class="lbl"><span>月支出</span><i id="ar1"></i></span><b id="expenseSum">$0</b></button>
+      <button class="sum r" id="goIn"><span class="lbl"><span>月收入</span><i id="ar2"></i></span><b id="incomeSum">$0</b></button>
     </div>
+    <div class="ringbox">
+      <svg viewBox="0 0 220 220" id="ring" aria-hidden="true"></svg>
+      <div class="ring-center">
+        <span class="cn" id="coinIc"></span>
+        <span class="t">月結餘 <button id="eyeBtn" aria-label="隱藏金額"></button></span>
+        <b id="balance">$0</b>
+      </div>
+    </div>
+    <div class="ring-legend" id="ringLegend"></div>
   </div>
 
-  <h2>支出分類 <button class="see-more" id="seeCat">看分析 ›</button></h2>
-  <div class="panel" id="catPanel"></div>
-
-  <h2>明細</h2>
   <div id="list"></div>
 </div>
 
@@ -361,7 +408,14 @@ const P = {
   left:    "M15 5l-7 7 7 7",
   right:   "M9 5l7 7-7 7",
   cal:     "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01",
-  del:     "M9 6h11v12H9l-6-6zM12 10l4 4M16 10l-4 4"
+  del:     "M9 6h11v12H9l-6-6zM12 10l4 4M16 10l-4 4",
+  menu:    "M4 6h16M4 12h12M4 18h8",
+  flame:   "M12 3c.5 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2.4 1.3-3.9 2.4-4.9.4 1.8 1.3 2.9 2.4 2.9-.6-3-.3-5.8.2-8.5z",
+  caret:   "M5 8h14l-7 9z",
+  tri:     "M8 4l10 8-10 8z",
+  coins:   "M5 8c0-1.7 3.1-3 7-3s7 1.3 7 3-3.1 3-7 3-7-1.3-7-3zM5 8v4c0 1.7 3.1 3 7 3s7-1.3 7-3V8M5 12v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4",
+  eye:     "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+  eyeoff:  "M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"
 };
 const svg = (k, w = 2) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${["more"].includes(k) ? 3.2 : w}" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k]}"/></svg>`;
 
@@ -394,27 +448,52 @@ function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add
 function escapeHtml(s) { return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
 // ── 主畫面 ──
+let hide = false; try { hide = localStorage.getItem("wallet-hide") === "1"; } catch {}
+const show = (txt) => hide ? "＊＊＊＊" : txt;
+function streakDays() {
+  const days = new Set(records.map((r) => r.date));
+  const d = new Date(); if (!days.has(ymd(d))) d.setDate(d.getDate() - 1);
+  let n = 0; while (days.has(ymd(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function ringSvg(inc, exp) {
+  const R = 85, C = 2 * Math.PI * R, sw = 34;
+  let arcs = "";
+  if (!inc && !exp) arcs = `<circle cx="110" cy="110" r="${R}" fill="none" stroke="#EDE7DB" stroke-width="${sw}"/>`;
+  else {
+    const f = inc ? Math.min(exp / inc, 1) : 1;
+    arcs = `<circle cx="110" cy="110" r="${R}" fill="none" stroke="${C_RING_IN}" stroke-width="${sw}"/>`;
+    if (f > 0) arcs += `<circle cx="110" cy="110" r="${R}" fill="none" stroke="${C_RING_OUT}" stroke-width="${sw}"
+      stroke-dasharray="${(C * f).toFixed(2)} ${C.toFixed(2)}" transform="rotate(-90 110 110)"/>`;
+    if (f > 0 && f < 1) [0, f].forEach((t) => { const a = t * 2 * Math.PI - Math.PI / 2;
+      arcs += `<line x1="${110 + 68 * Math.cos(a)}" y1="${110 + 68 * Math.sin(a)}" x2="${110 + 102 * Math.cos(a)}" y2="${110 + 102 * Math.sin(a)}" stroke="var(--ink)" stroke-width="2.5"/>`; });
+  }
+  return arcs + `<circle cx="110" cy="110" r="${R + sw / 2}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+    <circle cx="110" cy="110" r="${R - sw / 2}" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>`;
+}
+const C_RING_OUT = "#F5B57E", C_RING_IN = "#B8C9EA";
+
 function render() {
   const ym = `${view.getFullYear()}-${pad2(view.getMonth()+1)}`;
   $("monthLabel").textContent = `${view.getFullYear()} 年 ${view.getMonth()+1} 月`;
+  $("monthInput").value = ym;
   const rows = records.filter((r) => r.date.startsWith(ym)).sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts);
   const inc = rows.filter((r) => r.type === "in").reduce((s, r) => s + r.amount, 0);
   const exp = rows.filter((r) => r.type === "out").reduce((s, r) => s + r.amount, 0);
-  $("balance").textContent = (inc - exp < 0 ? "-" : "") + money(Math.abs(inc - exp));
-  $("incomeSum").textContent = money(inc);
-  $("expenseSum").textContent = money(exp);
-
-  const byCat = {};
-  rows.filter((r) => r.type === "out").forEach((r) => byCat[r.cat] = (byCat[r.cat] || 0) + r.amount);
-  const cats = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
-  const max = cats.length ? cats[0][1] : 1;
-  $("catPanel").innerHTML = cats.length
-    ? cats.map(([c, v]) => `<div class="cat-row"><span class="emo">${iconOf(c)}</span><span class="name">${c}</span>
-        <span class="bar"><i style="width:${(v / max * 100).toFixed(1)}%"></i></span><span class="amt">${money(v)}</span></div>`).join("")
-    : `<div class="empty" style="padding:10px 0">這個月還沒有支出</div>`;
+  $("expenseSum").textContent = show(money(exp));
+  $("incomeSum").textContent = show(money(inc));
+  $("balance").textContent = show((inc - exp < 0 ? "-" : "") + money(Math.abs(inc - exp)));
+  $("eyeBtn").innerHTML = svg(hide ? "eyeoff" : "eye");
+  $("ring").innerHTML = ringSvg(inc, exp);
+  $("ringLegend").innerHTML = !inc && !exp ? "這個月還沒有紀錄"
+    : inc ? `<span><i style="background:${C_RING_OUT}"></i>已花 ${Math.round(exp / inc * 100)}%</span><span><i style="background:${C_RING_IN}"></i>${exp > inc ? "已超支" : "還剩 " + Math.round((1 - exp / inc) * 100) + "%"}</span>`
+    : `<span><i style="background:${C_RING_OUT}"></i>本月還沒有收入</span>`;
+  const n = streakDays();
+  $("streak").hidden = !n;
+  $("streak").innerHTML = `${svg("flame")}${n}`;
 
   if (!rows.length) {
-    $("list").innerHTML = `<div class="panel empty"><img src="icons/icon-192.png" alt="">錢包空空的，按下方金幣記第一筆吧！</div>`;
+    $("list").innerHTML = `<div class="dcard empty" style="padding:24px 0"><img src="icons/icon-192.png" alt="">錢包空空的，按下方「＋」記第一筆吧！</div>`;
     return;
   }
   const groups = {};
@@ -422,11 +501,11 @@ function render() {
   $("list").innerHTML = Object.entries(groups).map(([d, items]) => {
     const dt = parse(d);
     const net = items.reduce((s, r) => s + (r.type === "in" ? r.amount : -r.amount), 0);
-    return `<div class="day"><div class="day-head"><span>${dt.getMonth()+1}/${dt.getDate()}（${WEEK[dt.getDay()]}）</span>
-      <span>${net >= 0 ? "+" : "-"}${money(Math.abs(net))}</span></div><div class="panel" style="padding:4px 14px">` +
-      items.map((r) => `<button class="item ${r.type}" data-id="${r.id}"><span class="coin">${iconOf(r.cat)}</span>
-        <span class="info"><b>${r.cat}</b>${r.note ? `<small>${escapeHtml(r.note)}</small>` : ""}</span>
-        <span class="money">${r.type === "in" ? "+" : "-"}${money(r.amount)}</span></button>`).join("") + `</div></div>`;
+    return `<div class="dcard"><div class="dh"><span>${dt.getFullYear()}/${pad2(dt.getMonth()+1)}/${pad2(dt.getDate())} 星期${WEEK[dt.getDay()]}</span>
+      <span class="tot ${net >= 0 ? "pos" : ""}">${show((net < 0 ? "$-" : "$") + money(Math.abs(net)).slice(1))}</span></div>` +
+      items.map((r) => `<button class="item ${r.type}" data-id="${r.id}"><span class="ic dot">${iconOf(r.cat)}</span>
+        <span class="info"><b>${r.note ? escapeHtml(r.note) : r.cat}</b></span>
+        <span class="money">${show((r.type === "in" ? "$" : "$-") + money(r.amount).slice(1))}</span></button>`).join("") + `</div>`;
   }).join("");
 }
 
@@ -537,8 +616,22 @@ $("delBtn").onclick = () => {
   records = records.filter((r) => r.id !== form.id); save(); render(); closeAdd(); toast("已刪除");
 };
 
-$("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
-$("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
+$("menuBtn").innerHTML = svg("menu", 2.6);
+$("caret").innerHTML = svg("caret");
+$("ar1").innerHTML = svg("tri"); $("ar2").innerHTML = svg("tri");
+$("coinIc").innerHTML = svg("coins");
+$("monthInput").addEventListener("change", (e) => { if (!e.target.value) return; const [y, m] = e.target.value.split("-").map(Number); view = new Date(y, m - 1, 1); render(); });
+$("eyeBtn").onclick = () => { hide = !hide; try { localStorage.setItem("wallet-hide", hide ? "1" : "0"); } catch {} render(); };
+$("streak").onclick = () => toast(`已連續記帳 ${streakDays()} 天，繼續加油！`);
+$("goOut").onclick = () => openAna("cat", view);
+$("goIn").onclick = () => openAna("month", view);
+// 左右滑動切換月份
+let sx = null, sy = 0;
+$("swipeArea").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+$("swipeArea").addEventListener("touchend", (e) => {
+  if (sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { view.setMonth(view.getMonth() + (dx < 0 ? 1 : -1)); render(); }
+});
 
 $("menuBtn").onclick = (e) => { e.stopPropagation(); $("menu").classList.toggle("show"); };
 document.addEventListener("click", () => $("menu").classList.remove("show"));
@@ -689,7 +782,6 @@ function catView() {
 $("anaBack").innerHTML = svg("back", 2.4);
 $("anaBtn").innerHTML = svg("invest", 2.2);
 $("anaBtn").onclick = () => openAna("month");
-$("seeCat").onclick = () => openAna("cat", view);
 $("anaBack").onclick = closeAna;
 $("anaSeg").onclick = (e) => { const v = e.target.dataset.v; if (!v) return; ana.view = v; if (!ana.ym) ana.ym = new Date(view); renderAna(); };
 $("anaBody").addEventListener("click", (e) => {
