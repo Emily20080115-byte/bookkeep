@@ -1,6 +1,6 @@
 // 離線快取：沒網路也能打開記帳
-const CACHE = "wallet-v22";
-const FILES = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
+const CACHE = "wallet-v23";
+const FILES = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png", "./icons/splash.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)));
