@@ -256,7 +256,6 @@
   .dcard .item { padding: 13px 16px; border-bottom: 1px solid #EEE8DD; }
   .dcard .item:last-child { border-bottom: 0; }
   .dcard .item .ic svg { width: 30px; height: 30px; }
-  .dcard .item.in .ic::before { background: var(--blue); }
   .dcard .item .info b { font-weight: 500; font-size: 16px; }
   .dcard .item .money { color: var(--ink); font-weight: 600; font-size: 16px; }
   .dcard .item.in .money { color: var(--line); }
@@ -397,7 +396,7 @@
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 8</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 9</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -579,6 +578,23 @@ const CATS = {
 };
 // 舊版分類名稱也給圖示
 const LEGACY = { "餐飲": "dinner", "居家": "home" };
+// 分類顏色：吃的都是橘色，其他每個分類固定一個顏色
+const FOOD_CATS = ["早餐", "午餐", "晚餐", "飲品", "點心", "餐飲"];
+const CAT_COLOR = {
+  "交通": "#2A78D6", "購物": "#E87BA4", "日用品": "#1BAF7A", "房租": "#6250D6", "居家": "#6250D6", "娛樂": "#EDA100",
+  "醫療": "#008300", "學習": "#0E8FB0", "通訊": "#7F8FA6", "禮物": "#B8338A",
+  "薪水": "#2A78D6", "獎金": "#EDA100", "零用錢": "#1BAF7A", "投資": "#008300", "紅包": "#E34948", "退款": "#6250D6"
+};
+const C_FOOD = "#EB6834", C_OTHERCAT = "#A8A39A";
+const colorOf = (cat) => FOOD_CATS.includes(cat) ? C_FOOD : (CAT_COLOR[cat] || C_OTHERCAT);
+// 依現在時間猜是哪一餐
+function mealByTime(d = new Date()) {
+  const h = d.getHours() + d.getMinutes() / 60;
+  if (h >= 5 && h < 10.5) return "早餐";
+  if (h >= 10.5 && h < 14) return "午餐";
+  if (h >= 17 && h < 21) return "晚餐";
+  return "點心";
+}
 const iconOf = (cat) => svg((CATS.out.concat(CATS.in).find((c) => c[0] === cat) || [0, LEGACY[cat] || "more"])[1]);
 
 const KEY = "wallet-records-v1";
@@ -658,7 +674,7 @@ function render() {
     const net = items.reduce((s, r) => s + (r.type === "in" ? r.amount : -r.amount), 0);
     return `<div class="dcard"><div class="dh"><span>${dt.getFullYear()}/${pad2(dt.getMonth()+1)}/${pad2(dt.getDate())} 星期${WEEK[dt.getDay()]}</span>
       <span class="tot ${net >= 0 ? "pos" : ""}">${show((net < 0 ? "$-" : "$") + money(Math.abs(net)).slice(1))}</span></div>` +
-      items.map((r) => `<button class="item ${r.type}" data-id="${r.id}"><span class="ic dot">${iconOf(r.cat)}</span>
+      items.map((r) => `<button class="item ${r.type}" data-id="${r.id}"><span class="ic dot" style="--dot:${colorOf(r.cat)}">${iconOf(r.cat)}</span>
         <span class="info"><b>${r.note ? escapeHtml(r.note) : r.cat}</b></span>
         <span class="money">${show((r.type === "in" ? "$" : "$-") + money(r.amount).slice(1))}</span></button>`).join("") + `</div>`;
   }).join("");
@@ -716,9 +732,9 @@ function shiftDay(n) { const d = parse(form.date); d.setDate(d.getDate() + n); f
 // ── 分類與常用備註 ──
 function renderCats() {
   $("cats").innerHTML = CATS[form.type].map(([n, k]) =>
-    `<button data-c="${n}" class="${n === form.cat ? "on" : ""}"><span class="ic">${svg(k, 1.8)}</span>${n}</button>`).join("");
+    `<button data-c="${n}" class="${n === form.cat ? "on" : ""}"><span class="ic" style="--dot:${colorOf(n)}">${svg(k, 1.8)}</span>${n}</button>`).join("");
   document.querySelectorAll("#seg button").forEach((b) => b.classList.toggle("on", b.dataset.t === form.type));
-  $("selIc").innerHTML = iconOf(form.cat);
+  $("selIc").innerHTML = iconOf(form.cat); $("selIc").style.setProperty("--dot", colorOf(form.cat));
   const notes = [];
   records.filter((r) => r.type === form.type && r.cat === form.cat && r.note).sort((a, b) => b.ts - a.ts)
     .forEach((r) => { if (!notes.includes(r.note) && notes.length < 8) notes.push(r.note); });
@@ -729,7 +745,7 @@ function renderCats() {
 function openAdd(rec, preset) {
   if (rec) { form = { type: rec.type, cat: rec.cat, id: rec.id, date: rec.date, inv: rec.inv }; expr = String(rec.amount); $("note").value = rec.note || ""; }
   else if (preset) { form = { type: "out", cat: preset.cat, id: null, date: preset.date, inv: preset.inv }; expr = String(preset.amount); $("note").value = preset.note; }
-  else { form = { type: "out", cat: CATS.out[0][0], id: null, date: today() }; expr = ""; $("note").value = ""; }
+  else { form = { type: "out", cat: mealByTime(), id: null, date: today() }; expr = ""; $("note").value = ""; }
   $("delBtn").style.display = rec ? "" : "none";
   $("scanBtn").style.display = rec ? "none" : "";
   renderCats(); showExpr(); showDate();
@@ -760,7 +776,7 @@ $("backKey").innerHTML = svg("del", 2.2);
 
 $("addBtn").onclick = () => openAdd();
 $("backBtn").onclick = closeAdd;
-$("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t || t === form.type) return; form.type = t; if (!CATS[t].some((c) => c[0] === form.cat)) form.cat = CATS[t][0][0]; renderCats(); };
+$("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t || t === form.type) return; form.type = t; if (!CATS[t].some((c) => c[0] === form.cat)) form.cat = t === "out" ? mealByTime() : CATS[t][0][0]; renderCats(); };
 $("cats").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; form.cat = b.dataset.c; renderCats(); };
 $("chips").onclick = (e) => { const b = e.target.closest("button"); if (b) $("note").value = b.textContent; };
 $("note").addEventListener("keydown", (e) => { if (e.key === "Enter") e.target.blur(); });
@@ -872,10 +888,11 @@ function catView2() {
   rows.forEach((r) => (by[r.cat] = by[r.cat] || []).push(r));
   let cats = Object.entries(by).map(([c, list]) => ({ c, list, v: list.reduce((s, r) => s + r.amount, 0),
     pv: prevRows.filter((r) => r.cat === c).reduce((s, r) => s + r.amount, 0) })).sort((a, b) => b.v - a.v);
-  cats.forEach((x, i) => x.color = i < 7 ? PAL[i] : C_OTHER);
-  // 圖表用：第 8 名以後合併成「其他（合併）」
-  let segs = cats.slice(0, 7);
-  if (cats.length > 7) segs.push({ c: "其他（合併）", v: cats.slice(7).reduce((s, x) => s + x.v, 0), color: C_OTHER, merged: true });
+  cats.forEach((x) => x.color = colorOf(x.c));
+  // 圓餅圖：吃的排在一起，整塊依總額排序
+  const foodSum = cats.filter((x) => FOOD_CATS.includes(x.c)).reduce((s, x) => s + x.v, 0);
+  const gv = (x) => FOOD_CATS.includes(x.c) ? foodSum : x.v;
+  const segs = [...cats].sort((a, b) => gv(b) - gv(a) || (FOOD_CATS.includes(b.c) - FOOD_CATS.includes(a.c)) || b.v - a.v);
   if (!total) return `<div class="bcard empty" style="padding:30px 0">這段期間沒有${word}紀錄</div>`;
 
   let chart;
@@ -1168,7 +1185,7 @@ function guessCat(items) {
   const rules = [["飲品", /茶|咖啡|拿鐵|奶|飲|可樂|汽水|果汁|水$|豆漿/], ["早餐", /三明治|吐司|蛋餅|漢堡|飯糰|饅頭/],
     ["點心", /餅乾|蛋糕|甜|巧克力|洋芋片|零食|冰|布丁|麵包/], ["交通", /加油|汽油|柴油|停車|悠遊|捷運|高鐵|台鐵|客運/],
     ["日用品", /衛生紙|洗|牙|清潔|電池|垃圾袋|毛巾/], ["醫療", /藥|醫|口罩/], ["通訊", /電信|話費|網路/]];
-  if (/便當|飯|麵|餐|鍋|餃|湯|排/.test(t)) return new Date().getHours() < 16 ? "午餐" : "晚餐";
+  if (/便當|飯|麵|餐|鍋|餃|湯|排/.test(t)) return mealByTime();
   for (const [c, re] of rules) if (re.test(t)) return c;
   return "其他";
 }
