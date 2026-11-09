@@ -308,6 +308,64 @@
   .hb .t { flex: 1; height: 14px; background: #F1ECE2; border-radius: 4px; overflow: hidden; }
   .hb .t i { display: block; height: 100%; border-radius: 0 4px 4px 0; }
   .hb .v { width: 80px; text-align: right; font-variant-numeric: tabular-nums; }
+  /* ── 累計結餘、預算、發票 ── */
+  .mbar .rg { display: flex; }
+  .cum { display: flex; justify-content: center; margin: -8px 0 16px; }
+  .cum button { background: #fff; border: 2px solid var(--ink); border-radius: 18px; padding: 6px 14px; font-size: 14px; }
+  .cum b { font-variant-numeric: tabular-nums; margin-left: 4px; }
+  .quick { display: flex; gap: 10px; margin-bottom: 16px; }
+  .quick button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fff; border: 2px solid var(--ink);
+    border-radius: 16px; padding: 10px 0; font-weight: 700; font-size: 15px; }
+  .quick svg { width: 20px; height: 20px; }
+  .bmini .bh { font-size: 16px; padding: 12px 16px; }
+  .bmini .bh span:last-child { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .brow { padding: 10px 16px; border-top: 1px solid #EEE8DD; }
+  .brow:first-child { border-top: 0; }
+  .brow .l1 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 15px; }
+  .brow .l1 b { font-weight: 700; }
+  .brow .l1 span { font-variant-numeric: tabular-nums; font-size: 14px; }
+  .pbar { position: relative; height: 16px; background: #F1ECE2; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; margin: 7px 0 5px; }
+  .pbar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--orange); border-right: 2px solid var(--ink); }
+  .pbar i.full { border-right: 0; }
+  .pbar.warn i { background: var(--gold); }
+  .pbar.over i { background: var(--expense); }
+  .pbar .tick { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .35; }
+  .brow .l2 { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+  .brow .l2 .bad { font-weight: 700; }
+  .bud-sum .big { font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .bud-sum { padding: 16px 18px; }
+  .bud-sum .pbar { height: 22px; border-radius: 12px; }
+  .bud-sum .row { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); }
+  .bud-sum .row b { color: var(--ink); }
+  .btn-main { display: block; width: 100%; background: var(--line); color: #fff; border-radius: 16px; padding: 14px; font-weight: 700; font-size: 16px; margin-top: 10px; }
+  .hint { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 4px 4px 14px; }
+
+  /* 預算編輯視窗 */
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(47,62,92,.4); display: none; align-items: flex-end; justify-content: center; }
+  .modal.show { display: flex; }
+  .modal .box { background: var(--bg); width: 100%; max-width: 560px; border-radius: 24px 24px 0 0; border-top: 2.5px solid var(--ink);
+    padding: 18px 16px calc(env(safe-area-inset-bottom) + 18px); max-height: 90vh; overflow-y: auto; }
+  .modal h3 { margin: 0 0 12px; font-size: 18px; }
+  .modal label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 6px; font-weight: 600; }
+  .modal input { width: 100%; border: 2px solid var(--ink); border-radius: 14px; padding: 11px 14px; font: inherit; font-size: 17px; background: #fff; color: var(--ink); outline: 0; }
+  .chipset { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chipset button { border: 2px solid var(--ink); border-radius: 16px; padding: 6px 12px; font-size: 14px; background: #fff; }
+  .chipset button.on { background: var(--orange); font-weight: 700; }
+  .modal .acts { display: flex; gap: 10px; margin-top: 16px; }
+  .modal .acts .btn-main { margin: 0; flex: 1; }
+  .modal .acts .del { padding: 14px 18px; border-radius: 16px; }
+
+  /* 掃描發票 */
+  .scan { position: fixed; inset: 0; z-index: 55; background: #111; display: none; flex-direction: column; color: #fff; }
+  .scan.show { display: flex; }
+  .scan video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .scan .frame { position: absolute; left: 50%; top: 42%; width: min(64vw, 280px); aspect-ratio: 1; transform: translate(-50%, -50%);
+    border: 3px solid #fff; border-radius: 22px; box-shadow: 0 0 0 9999px rgba(0,0,0,.45); }
+  .scan .tip { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top) + 24px); text-align: center; font-size: 17px; font-weight: 700; padding: 0 20px; }
+  .scan .tip small { display: block; font-weight: 400; font-size: 13px; opacity: .85; margin-top: 6px; }
+  .scan .bot { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 26px); display: flex; gap: 12px; justify-content: center; padding: 0 16px; }
+  .scan .bot button { background: #fff; color: var(--ink); border-radius: 22px; padding: 12px 20px; font-weight: 700; font-size: 15px; }
+  .scan .bot button.ghost { background: rgba(255,255,255,.18); color: #fff; }
   .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
     padding: 6px; z-index: 25; display: none; min-width: 150px; }
   .menu.show { display: block; }
@@ -333,12 +391,13 @@
       <button class="streak" id="streak" hidden></button>
     </div>
     <label class="mpick"><span id="monthLabel"></span><span id="caret"></span><input type="month" id="monthInput" aria-label="選擇月份"></label>
-    <button class="tb2" id="anaBtn" aria-label="分析"></button>
+    <div class="rg"><button class="tb2" id="budBtn" aria-label="預算"></button><button class="tb2" id="anaBtn" aria-label="分析"></button></div>
   </header>
   <div class="menu left" id="menu">
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 7</button>
+    <button id="startBtn">設定起始金額</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 8</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -357,7 +416,9 @@
       </div>
     </div>
     <div class="ring-legend" id="ringLegend"></div>
+    <div class="cum"><button id="cumBtn">累計結餘<b id="cum">$0</b></button></div>
   </div>
+  <div class="quick"><button id="qScan"></button><button id="qBud"></button></div>
 
   <div id="list"></div>
 </div>
@@ -372,7 +433,7 @@
       <button data-t="out" class="on">支出</button>
       <button data-t="in">收入</button>
     </div>
-    <button class="tb trash" id="delBtn" aria-label="刪除" style="visibility:hidden"></button>
+    <span style="display:flex"><button class="tb" id="scanBtn" aria-label="掃描發票"></button><button class="tb trash" id="delBtn" aria-label="刪除" style="display:none"></button></span>
   </div>
 
   <div class="cats" id="cats"></div>
@@ -424,6 +485,45 @@
   <div class="ana-body" id="anaBody"></div>
 </section>
 
+<!-- 預算 -->
+<section class="ana" id="bud" aria-hidden="true">
+  <div class="topbar">
+    <button class="tb" id="budBack" aria-label="返回"></button>
+    <b style="font-size:18px">每月預算</b>
+    <button class="tb" id="budAdd" aria-label="新增預算"></button>
+  </div>
+  <div class="ana-body" id="budBody"></div>
+</section>
+
+<div class="modal" id="budModal">
+  <div class="box">
+    <h3 id="bmTitle">新增預算</h3>
+    <label for="bmName">名稱</label>
+    <input id="bmName" maxlength="12" placeholder="例如：吃飯">
+    <label for="bmAmt">每月金額</label>
+    <input id="bmAmt" type="number" inputmode="numeric" placeholder="例如：6000" min="0">
+    <label>包含哪些分類（可多選）</label>
+    <div class="chipset" id="bmCats"></div>
+    <div class="acts">
+      <button class="del" id="bmDel" hidden>刪除</button>
+      <button class="btn-main" style="background:transparent;color:var(--ink);border:2px solid var(--ink);flex:0 0 90px" id="bmCancel">取消</button>
+      <button class="btn-main" id="bmSave">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 掃描發票 -->
+<div class="scan" id="scan">
+  <video id="scanVideo" playsinline muted></video>
+  <div class="frame"></div>
+  <div class="tip">對準發票<u>左邊</u>的 QR Code<small id="scanMsg">讀到後會自動帶入金額、日期和品項</small></div>
+  <div class="bot">
+    <button class="ghost" id="scanClose">取消</button>
+    <button id="scanPhoto">改用拍照</button>
+  </div>
+  <input type="file" id="scanFile" accept="image/*" capture="environment" hidden>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -459,6 +559,9 @@ const P = {
   barsico: "M4 20h16M6 20V11h4v9M10 20V5h4v15M14 20v-7h4v7",
   pieico:  "M12 3a9 9 0 1 0 9 9h-9zM15 3.5A9 9 0 0 1 20.5 9H15z",
   sort:    "M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4",
+  plus:    "M12 5v14M5 12h14",
+  target:  "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11.5v1",
+  qr:      "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2h-2zM7 7h.01M17 7h.01M7 17h.01",
   menu:    "M4 6h16M4 12h12M4 18h8",
   flame:   "M12 3c.5 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2.4 1.3-3.9 2.4-4.9.4 1.8 1.3 2.9 2.4 2.9-.6-3-.3-5.8.2-8.5z",
   caret:   "M5 8h14l-7 9z",
@@ -536,19 +639,21 @@ function render() {
   $("eyeBtn").innerHTML = svg(hide ? "eyeoff" : "eye");
   $("ring").innerHTML = ringSvg(inc, exp);
   $("ringLegend").innerHTML = !inc && !exp ? "這個月還沒有紀錄"
-    : inc ? `<span><i style="background:${C_RING_OUT}"></i>已花 ${Math.round(exp / inc * 100)}%</span><span><i style="background:${C_RING_IN}"></i>${exp > inc ? "已超支" : "還剩 " + Math.round((1 - exp / inc) * 100) + "%"}</span>`
+    : inc ? `<span><i style="background:${C_RING_OUT}"></i>已花 ${Math.round(exp / inc * 100)}%</span>${exp > inc ? `<span class="bad">超支 ${show(money(exp - inc))}</span>` : `<span><i style="background:${C_RING_IN}"></i>還剩 ${Math.round((1 - exp / inc) * 100)}%</span>`}`
     : `<span><i style="background:${C_RING_OUT}"></i>本月還沒有收入</span>`;
+  const cum = cumulativeTo(view);
+  $("cum").textContent = show((cum < 0 ? "-" : "") + money(Math.abs(cum)));
   const n = streakDays();
   $("streak").hidden = !n;
   $("streak").innerHTML = `${svg("flame")}${n}`;
 
   if (!rows.length) {
-    $("list").innerHTML = `<div class="dcard empty" style="padding:24px 0"><img src="icons/icon-192.png" alt="">錢包空空的，按下方「＋」記第一筆吧！</div>`;
+    $("list").innerHTML = miniBudget() + `<div class="dcard empty" style="padding:24px 0"><img src="icons/icon-192.png" alt="">錢包空空的，按下方「＋」記第一筆吧！</div>`;
     return;
   }
   const groups = {};
   rows.forEach((r) => (groups[r.date] = groups[r.date] || []).push(r));
-  $("list").innerHTML = Object.entries(groups).map(([d, items]) => {
+  $("list").innerHTML = miniBudget() + Object.entries(groups).map(([d, items]) => {
     const dt = parse(d);
     const net = items.reduce((s, r) => s + (r.type === "in" ? r.amount : -r.amount), 0);
     return `<div class="dcard"><div class="dh"><span>${dt.getFullYear()}/${pad2(dt.getMonth()+1)}/${pad2(dt.getDate())} 星期${WEEK[dt.getDay()]}</span>
@@ -621,10 +726,12 @@ function renderCats() {
   $("chips").style.display = notes.length ? "" : "none";
 }
 
-function openAdd(rec) {
-  if (rec) { form = { type: rec.type, cat: rec.cat, id: rec.id, date: rec.date }; expr = String(rec.amount); $("note").value = rec.note || ""; }
+function openAdd(rec, preset) {
+  if (rec) { form = { type: rec.type, cat: rec.cat, id: rec.id, date: rec.date, inv: rec.inv }; expr = String(rec.amount); $("note").value = rec.note || ""; }
+  else if (preset) { form = { type: "out", cat: preset.cat, id: null, date: preset.date, inv: preset.inv }; expr = String(preset.amount); $("note").value = preset.note; }
   else { form = { type: "out", cat: CATS.out[0][0], id: null, date: today() }; expr = ""; $("note").value = ""; }
-  $("delBtn").style.visibility = rec ? "visible" : "hidden";
+  $("delBtn").style.display = rec ? "" : "none";
+  $("scanBtn").style.display = rec ? "none" : "";
   renderCats(); showExpr(); showDate();
   $("add").classList.add("open"); $("add").setAttribute("aria-hidden", "false");
   $("cats").scrollTop = 0;
@@ -636,6 +743,7 @@ function submit() {
   if (!isFinite(amount)) { toast("算式有誤，不能除以 0"); return; }
   if (!(amount > 0)) { toast("請先輸入金額"); return; }
   const data = { type: form.type, cat: form.cat, amount, date: form.date || today(), note: $("note").value.trim() };
+  if (form.inv) data.inv = form.inv;
   if (form.id) Object.assign(records.find((r) => r.id === form.id), data);
   else records.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ts: Date.now(), ...data });
   save();
@@ -686,7 +794,7 @@ $("swipeArea").addEventListener("touchend", (e) => {
 $("menuBtn").onclick = (e) => { e.stopPropagation(); $("menu").classList.toggle("show"); };
 document.addEventListener("click", () => $("menu").classList.remove("show"));
 $("exportBtn").onclick = () => {
-  const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
+  const blob = new Blob([JSON.stringify({ version: 2, records, budgets, start: startBal }, null, 2)], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `小錢包備份-${today()}.json`; a.click();
   toast("備份已下載");
 };
@@ -694,15 +802,21 @@ $("importBtn").onclick = () => $("importFile").click();
 $("importFile").onchange = async (e) => {
   const f = e.target.files[0]; if (!f) return;
   try {
-    const data = JSON.parse(await f.text());
+    const obj = JSON.parse(await f.text());
+    const data = Array.isArray(obj) ? obj : obj.records;
     if (!Array.isArray(data)) throw 0;
+    if (!Array.isArray(obj)) {
+      if (Array.isArray(obj.budgets)) { const bids = new Set(budgets.map((b) => b.id)); budgets = budgets.concat(obj.budgets.filter((b) => b && b.id && !bids.has(b.id))); saveBudgets(); }
+      if (typeof obj.start === "number" && !startBal) { startBal = obj.start; try { localStorage.setItem("wallet-start", String(startBal)); } catch {} }
+    }
     const ids = new Set(records.map((r) => r.id));
     records = records.concat(data.filter((r) => r && r.id && !ids.has(r.id) && r.amount > 0 && r.date));
     save(); render(); toast("匯入完成");
   } catch { toast("檔案格式不對"); }
   e.target.value = "";
 };
-$("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄嗎？這個動作無法復原。")) { records = []; save(); render(); toast("已清除"); } };
+$("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄、預算和起始金額嗎？這個動作無法復原。")) {
+  records = []; budgets = []; startBal = 0; save(); saveBudgets(); try { localStorage.removeItem("wallet-start"); } catch {} render(); toast("已清除"); } };
 
 // ── 分析 ──
 const C_IN = "#5B7BB8", C_OUT = "#E5814F";
@@ -834,7 +948,7 @@ function netView() {
     g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" ${i === ana.sel ? 'style="fill:var(--ink);font-weight:700"' : ""}>${m.d.getMonth() + 1}月</text>`;
     g += `<rect data-m="${i}" x="${x0}" y="0" width="${gw}" height="${H}" fill="transparent"/>`;
   });
-  const s = data[ana.sel], net = s.inc - s.exp, nn = ti - te;
+  const s = data[ana.sel], net = s.inc - s.exp, nn = ti - te, cumEnd = cumulativeTo(ana.anchor);
   const sign = (v) => (v < 0 ? "-" : "") + money(Math.abs(v));
   return `
   <div class="tiles" style="grid-template-columns:1fr 1fr 1fr">
@@ -842,6 +956,7 @@ function netView() {
     <div class="tile"><small><span class="sw" style="background:${C_OUT}"></span>支出</small><b style="font-size:17px">${money(te)}</b></div>
     <div class="tile"><small>結餘</small><b style="font-size:17px" class="${nn < 0 ? "bad" : ""}">${sign(nn)}</b></div>
   </div>
+  <div class="tile" style="margin-top:10px"><small>累計結餘（到 ${ana.anchor.getFullYear()}/${ana.anchor.getMonth() + 1} 月底，含起始金額 ${money(startBal)}）</small><b class="${cumEnd < 0 ? "bad" : ""}">${sign(cumEnd)}</b></div>
   <h2>${ana.period === "m" ? "近 6 個月比較" : "每月收入與支出"}</h2>
   <div class="chart-card">
     <div class="legend"><span><i style="background:${C_IN}"></i>收入</span><span><i style="background:${C_OUT}"></i>支出</span></div>
@@ -850,10 +965,11 @@ function netView() {
   </div>
   <h2>每月明細表</h2>
   <div class="panel" style="padding:6px 14px">
-    <table class="mt"><thead><tr><th>月份</th><th>收入</th><th>支出</th><th>結餘</th></tr></thead><tbody>
+    <table class="mt"><thead><tr><th>月份</th><th>收入</th><th>支出</th><th>結餘</th><th>累計</th></tr></thead><tbody>
     ${data.map((m, i) => `<tr data-m="${i}" class="${i === ana.sel ? "sel" : ""}"><td>${m.d.getFullYear() !== ana.anchor.getFullYear() ? m.d.getFullYear() + "/" : ""}${m.d.getMonth() + 1} 月</td>
       <td>${m.n ? money(m.inc) : "—"}</td><td>${m.n ? money(m.exp) : "—"}</td>
-      <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? sign(m.inc - m.exp) : "—"}</td></tr>`).join("")}
+      <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? sign(m.inc - m.exp) : "—"}</td>
+      <td class="${cumulativeTo(m.d) < 0 ? "neg" : ""}">${short(cumulativeTo(m.d))}</td></tr>`).join("")}
     </tbody></table>
   </div>`;
 }
@@ -876,6 +992,250 @@ $("anaBody").addEventListener("click", (e) => {
   else if (ds.c) { ana.open = ana.open === ds.c ? null : ds.c; }
   const st = $("anaBody").scrollTop; renderAna(); $("anaBody").scrollTop = st;
 });
+
+// ── 起始金額與累計結餘 ──
+let startBal = 0; try { startBal = parseFloat(localStorage.getItem("wallet-start")) || 0; } catch {}
+function cumulativeTo(monthDate) {
+  const end = ymKey(monthDate);
+  return records.reduce((s, r) => r.date.slice(0, 7) <= end ? s + (r.type === "in" ? r.amount : -r.amount) : s, startBal);
+}
+$("startBtn").onclick = () => {
+  const v = prompt("開始記帳時，你手上原本有多少錢？\n（會加進累計結餘裡，不知道可以填 0）", String(startBal));
+  if (v === null) return;
+  const n = parseFloat(v.replace(/[,$\s]/g, ""));
+  if (!isFinite(n)) { toast("請輸入數字"); return; }
+  startBal = n; try { localStorage.setItem("wallet-start", String(n)); } catch {}
+  render(); toast("已設定起始金額");
+};
+
+// ── 預算 ──
+const BKEY = "wallet-budgets-v1";
+let budgets = []; try { budgets = JSON.parse(localStorage.getItem(BKEY)) || []; } catch {}
+function saveBudgets() { try { localStorage.setItem(BKEY, JSON.stringify(budgets)); } catch {} }
+let budView = null, bm = { id: null, cats: [] };
+
+function budStats(b, monthDate) {
+  const key = ymKey(monthDate);
+  const list = records.filter((r) => r.type === "out" && r.date.startsWith(key) && b.cats.includes(r.cat));
+  const spent = list.reduce((s, r) => s + r.amount, 0);
+  return { spent, left: b.amount - spent, pct: b.amount ? spent / b.amount : 0, n: list.length };
+}
+function daysInfo(monthDate) {
+  const now = new Date(), dim = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+  if (ymKey(monthDate) === ymKey(now)) return { left: dim - now.getDate() + 1, frac: now.getDate() / dim, cur: true };
+  return { left: 0, frac: monthDate < now ? 1 : 0, cur: false };
+}
+function pbar(pct, tick) {
+  const cls = pct > 1 ? "over" : pct >= 0.85 ? "warn" : "";
+  const w = Math.min(pct, 1) * 100;
+  return `<div class="pbar ${cls}"><i class="${w >= 99.5 ? "full" : ""}" style="width:${w.toFixed(1)}%;${w === 0 ? "border:0" : ""}"></i>${tick ? `<span class="tick" style="left:${(tick * 100).toFixed(1)}%"></span>` : ""}</div>`;
+}
+function budRow(b, monthDate, tick) {
+  const s = budStats(b, monthDate);
+  return `<div class="brow" data-bid="${b.id}">
+    <div class="l1"><b>${escapeHtml(b.name)}</b><span>${money(s.spent)} / ${money(b.amount)}</span></div>
+    ${pbar(s.pct, tick)}
+    <div class="l2"><span>${s.left >= 0 ? `還剩 ${money(s.left)}` : `<span class="bad">超支 ${money(-s.left)}</span>`}</span><span>${Math.round(s.pct * 100)}%</span></div>
+  </div>`;
+}
+function miniBudget() {
+  if (!budgets.length) return "";
+  const di = daysInfo(view);
+  return `<div class="bcard bmini" id="miniBud"><div class="bh"><span>本月預算</span><span>看全部 ›</span></div>
+    ${budgets.map((b) => budRow(b, view, di.cur ? di.frac : 0)).join("")}</div>`;
+}
+
+function openBud() {
+  budView = new Date(view.getFullYear(), view.getMonth(), 1);
+  renderBud();
+  $("bud").classList.add("open"); $("bud").setAttribute("aria-hidden", "false");
+}
+function closeBud() { $("bud").classList.remove("open"); $("bud").setAttribute("aria-hidden", "true"); render(); }
+
+function renderBud() {
+  const d = budView, di = daysInfo(d);
+  const nav = `<div class="month"><button data-bm="-1">‹</button><span>${d.getFullYear()} 年 ${d.getMonth() + 1} 月</span><button data-bm="1">›</button></div>`;
+  if (!budgets.length) {
+    $("budBody").innerHTML = nav + `<div class="bcard" style="padding:22px 18px;text-align:center">
+      <img src="icons/icon-192.png" alt="" style="width:110px"><p style="margin:6px 0 4px;font-weight:700">還沒有預算</p>
+      <p class="hint">幫自己定每個月能花多少，例如「吃飯 6000」，<br>App 會自動算出你花了多少、還剩多少。</p>
+      <button class="btn-main" id="budQuick">建立「吃飯 6000」</button>
+      <button class="btn-main" style="background:#fff;color:var(--ink);border:2px solid var(--ink)" id="budNew">自己設定</button></div>`;
+    return;
+  }
+  const tb = budgets.reduce((s, b) => s + b.amount, 0);
+  const covered = new Set(budgets.flatMap((b) => b.cats));
+  const key = ymKey(d);
+  const outRows = records.filter((r) => r.type === "out" && r.date.startsWith(key));
+  const ts = outRows.filter((r) => covered.has(r.cat)).reduce((s, r) => s + r.amount, 0);
+  const other = outRows.filter((r) => !covered.has(r.cat)).reduce((s, r) => s + r.amount, 0);
+  const left = tb - ts;
+  $("budBody").innerHTML = nav + `
+  <div class="bcard bud-sum">
+    <div class="row"><span>本月預算剩下</span><span>總預算 <b>${money(tb)}</b></span></div>
+    <div class="big ${left < 0 ? "bad" : ""}">${left < 0 ? "-" : ""}${money(Math.abs(left))}</div>
+    ${pbar(tb ? ts / tb : 0, di.cur ? di.frac : 0)}
+    <div class="row"><span>已花 <b>${money(ts)}</b>（${tb ? Math.round(ts / tb * 100) : 0}%）</span>
+      ${di.cur && left > 0 ? `<span>剩 ${di.left} 天，每天可花 <b>${money(Math.floor(left / di.left))}</b></span>` : ""}</div>
+  </div>
+  <p class="hint">長條中間的細線是「今天」的位置：橘色超過細線，代表花得比預期快。</p>
+  <div class="bcard">${budgets.map((b) => budRow(b, d, di.cur ? di.frac : 0) +
+    (() => { const s = budStats(b, d); return di.cur && s.left > 0 ? `<div class="brow" style="border-top:0;padding-top:0"><div class="l2"><span>包含：${b.cats.join("、")}</span><span>每天可花 ${money(Math.floor(s.left / di.left))}</span></div></div>`
+      : `<div class="brow" style="border-top:0;padding-top:0"><div class="l2"><span>包含：${b.cats.join("、")}</span></div></div>`; })()).join("")}</div>
+  ${other ? `<p class="hint">另外還有 ${money(other)} 的支出沒有列入任何預算。</p>` : ""}
+  <button class="btn-main" id="budNew">＋ 新增預算</button>
+  <p class="hint" style="text-align:center;margin-top:10px">點預算可以修改金額或分類</p>`;
+}
+
+function openBm(b, preset) {
+  bm = b ? { id: b.id, cats: [...b.cats] } : { id: null, cats: preset ? preset.cats : [] };
+  $("bmTitle").textContent = b ? "修改預算" : "新增預算";
+  $("bmName").value = b ? b.name : (preset ? preset.name : "");
+  $("bmAmt").value = b ? b.amount : (preset ? preset.amount : "");
+  $("bmDel").hidden = !b;
+  renderBmCats();
+  $("budModal").classList.add("show");
+}
+function renderBmCats() {
+  $("bmCats").innerHTML = CATS.out.map(([n]) => `<button data-c="${n}" class="${bm.cats.includes(n) ? "on" : ""}">${n}</button>`).join("");
+}
+const FOOD = ["早餐", "午餐", "晚餐", "飲品", "點心"];
+$("bmCats").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; const c = b.dataset.c;
+  bm.cats = bm.cats.includes(c) ? bm.cats.filter((x) => x !== c) : [...bm.cats, c]; renderBmCats(); };
+$("bmCancel").onclick = () => $("budModal").classList.remove("show");
+$("budModal").onclick = (e) => { if (e.target.id === "budModal") $("budModal").classList.remove("show"); };
+$("bmSave").onclick = () => {
+  const name = $("bmName").value.trim(), amount = parseFloat($("bmAmt").value);
+  if (!name) { toast("請輸入名稱"); return; }
+  if (!(amount > 0)) { toast("請輸入金額"); return; }
+  if (!bm.cats.length) { toast("至少選一個分類"); return; }
+  if (bm.id) Object.assign(budgets.find((b) => b.id === bm.id), { name, amount, cats: bm.cats });
+  else budgets.push({ id: "b" + Date.now().toString(36), name, amount, cats: bm.cats });
+  saveBudgets(); $("budModal").classList.remove("show"); renderBud(); render(); toast("預算已儲存");
+};
+$("bmDel").onclick = () => { if (!confirm("確定刪除這個預算？")) return;
+  budgets = budgets.filter((b) => b.id !== bm.id); saveBudgets(); $("budModal").classList.remove("show"); renderBud(); render(); };
+$("budBack").innerHTML = svg("back", 2.4);
+$("budAdd").innerHTML = svg("plus", 2.4);
+$("budBack").onclick = closeBud;
+$("budAdd").onclick = () => openBm(null);
+$("budBody").addEventListener("click", (e) => {
+  const t = e.target.closest("[data-bm],[data-bid],#budQuick,#budNew"); if (!t) return;
+  if (t.id === "budQuick") openBm(null, { name: "吃飯", amount: 6000, cats: FOOD });
+  else if (t.id === "budNew") openBm(null, budgets.length ? null : { name: "", amount: "", cats: FOOD });
+  else if (t.dataset.bm) { budView = new Date(budView.getFullYear(), budView.getMonth() + +t.dataset.bm, 1); renderBud(); }
+  else if (t.dataset.bid) openBm(budgets.find((b) => b.id === t.dataset.bid));
+});
+$("budBtn").innerHTML = svg("target", 2.2);
+$("budBtn").onclick = openBud;
+$("qBud").onclick = openBud;
+$("list").addEventListener("click", (e) => { if (e.target.closest("#miniBud")) openBud(); });
+
+// ── 發票掃描（電子發票證明聯左邊的 QR Code） ──
+let scanStream = null, scanTimer = null;
+function loadJsQR() {
+  if (window.jsQR) return Promise.resolve();
+  return new Promise((ok, fail) => { const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
+}
+function decodeBytes(bytes, enc) {
+  try {
+    if (enc === "0") return new TextDecoder("big5").decode(bytes);
+    const t = new TextDecoder("utf-8").decode(bytes);
+    return t;
+  } catch { return String.fromCharCode(...bytes); }
+}
+function parseInvoice(code) {
+  const raw = code.binaryData && code.binaryData.length ? Uint8Array.from(code.binaryData) : new TextEncoder().encode(code.data);
+  const head = String.fromCharCode(...raw.slice(0, 77));
+  if (!/^[A-Z]{2}\d{8}\d{7}/.test(head)) return null;
+  const no = head.slice(0, 10);
+  const y = +head.slice(10, 13) + 1911, m = head.slice(13, 15), d = head.slice(15, 17);
+  const total = parseInt(head.slice(29, 37), 16);
+  const latin = String.fromCharCode(...raw);
+  const parts = latin.slice(77).split(":");
+  const enc = parts[4] || "1";
+  let text = decodeBytes(raw.slice(77), enc);
+  let segs = text.split(":").slice(5);
+  if (enc === "2") { try { segs = new TextDecoder().decode(Uint8Array.from(atob(segs.join(":")), (c) => c.charCodeAt(0))).split(":"); } catch { segs = []; } }
+  const items = [];
+  for (let i = 0; i + 2 < segs.length; i += 3) { const n = (segs[i] || "").trim(); if (n) items.push(n); }
+  if (!(total > 0)) return null;
+  return { no, date: `${y}-${m}-${d}`, total, items };
+}
+function guessCat(items) {
+  const t = items.join(" ");
+  const rules = [["飲品", /茶|咖啡|拿鐵|奶|飲|可樂|汽水|果汁|水$|豆漿/], ["早餐", /三明治|吐司|蛋餅|漢堡|飯糰|饅頭/],
+    ["點心", /餅乾|蛋糕|甜|巧克力|洋芋片|零食|冰|布丁|麵包/], ["交通", /加油|汽油|柴油|停車|悠遊|捷運|高鐵|台鐵|客運/],
+    ["日用品", /衛生紙|洗|牙|清潔|電池|垃圾袋|毛巾/], ["醫療", /藥|醫|口罩/], ["通訊", /電信|話費|網路/]];
+  if (/便當|飯|麵|餐|鍋|餃|湯|排/.test(t)) return new Date().getHours() < 16 ? "午餐" : "晚餐";
+  for (const [c, re] of rules) if (re.test(t)) return c;
+  return "其他";
+}
+function useInvoice(inv) {
+  stopScan();
+  const go = () => {
+    openAdd(null, { amount: inv.total, date: inv.date, note: inv.items.slice(0, 4).join("、").slice(0, 40) || ("發票 " + inv.no), cat: guessCat(inv.items), inv: inv.no });
+    toast(`已讀取發票 ${inv.no}，確認後按 OK`);
+  };
+  if (records.some((r) => r.inv === inv.no) && !confirm(`發票 ${inv.no} 已經記過了，還要再記一次嗎？`)) return;
+  go();
+}
+function tryCode(code) {
+  if (!code) return false;
+  if (code.data.startsWith("**")) { $("scanMsg").textContent = "這是右邊的 QR Code，請對準左邊那個"; return false; }
+  const inv = parseInvoice(code);
+  if (!inv) { $("scanMsg").textContent = "這不是電子發票的 QR Code"; return false; }
+  useInvoice(inv); return true;
+}
+async function startScan() {
+  $("scan").classList.add("show"); $("scanMsg").textContent = "讀到後會自動帶入金額、日期和品項";
+  try { await loadJsQR(); } catch { $("scanMsg").textContent = "需要網路才能掃描，請連上網路再試"; return; }
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1280 } }, audio: false });
+  } catch { $("scanMsg").textContent = "無法開啟相機，可以按「改用拍照」"; return; }
+  const v = $("scanVideo"); v.srcObject = scanStream; await v.play().catch(() => {});
+  const c = document.createElement("canvas"), ctx = c.getContext("2d", { willReadFrequently: true });
+  const tick = () => {
+    if (!scanStream) return;
+    if (v.videoWidth) {
+      const s = Math.min(v.videoWidth, v.videoHeight) * 0.8, sx = (v.videoWidth - s) / 2, sy = (v.videoHeight - s) / 2.4;
+      c.width = c.height = 480; ctx.drawImage(v, sx, Math.max(0, sy), s, s, 0, 0, 480, 480);
+      const img = ctx.getImageData(0, 0, 480, 480);
+      if (tryCode(jsQR(img.data, 480, 480, { inversionAttempts: "dontInvert" }))) return;
+    }
+    scanTimer = setTimeout(tick, 180);
+  };
+  tick();
+}
+function stopScan() {
+  clearTimeout(scanTimer);
+  if (scanStream) scanStream.getTracks().forEach((t) => t.stop());
+  scanStream = null; $("scan").classList.remove("show");
+}
+async function scanImageFile(f) {
+  try { await loadJsQR(); } catch { toast("需要網路才能辨識"); return; }
+  const img = await createImageBitmap(f);
+  const c = document.createElement("canvas"), ctx = c.getContext("2d", { willReadFrequently: true });
+  const tries = [[0, 0, 1, 1], [0, 0, 0.55, 1], [0, 0, 0.55, 0.6], [0, 0.2, 0.55, 0.6], [0, 0.4, 0.55, 0.6]];
+  for (const [x, y, w, h] of tries) {
+    const sw = img.width * w, sh = img.height * h, scale = Math.min(1, 1400 / Math.max(sw, sh));
+    c.width = sw * scale; c.height = sh * scale;
+    ctx.drawImage(img, img.width * x, img.height * y, sw, sh, 0, 0, c.width, c.height);
+    const code = jsQR(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height);
+    if (code && !code.data.startsWith("**")) { if (tryCode(code)) return; }
+  }
+  toast("讀不到發票的 QR Code，請拍清楚一點再試");
+}
+$("scanClose").onclick = stopScan;
+$("scanPhoto").onclick = () => $("scanFile").click();
+$("scanFile").onchange = (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) scanImageFile(f); };
+$("qScan").onclick = startScan;
+$("cumBtn").onclick = () => toast("從開始記帳一路累積到這個月底的結餘（選單可設定起始金額）");
+$("scanBtn").onclick = () => { closeAdd(); startScan(); };
+$("qScan").innerHTML = svg("qr", 2) + "掃描發票";
+$("qBud").innerHTML = svg("target", 2) + "預算";
+$("scanBtn").innerHTML = svg("qr", 2);
 
 render();
 setTimeout(() => $("splash").classList.add("hide"), 1400);
