@@ -163,12 +163,64 @@
   .pad .ok { grid-row: span 2; height: auto; background: var(--orange-deep); color: #fff; font-size: 24px; letter-spacing: 1px; }
   .pad button:active { filter: brightness(.9); transform: scale(.95); }
 
+  /* ── 分析頁 ── */
+  .hdr-btns { display: flex; gap: 10px; }
+  .icon-btn svg { width: 20px; height: 20px; color: var(--line); }
+  .see-more { float: right; font-size: 13px; color: var(--line); font-weight: 600; }
+  .ana { position: fixed; inset: 0; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .3s ease; visibility: hidden; }
+  .ana.open { transform: none; visibility: visible; }
+  .ana .seg button { width: 104px; font-size: 15px; letter-spacing: 1px; }
+  .ana-body { flex: 1; overflow-y: auto; padding: 14px max(16px, calc(50% - 280px)) calc(env(safe-area-inset-bottom) + 30px); -webkit-overflow-scrolling: touch; }
+  .ana-body .month { margin-top: 0; }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { background: #fff; border-radius: 18px; padding: 12px 14px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .tile small { display: block; font-size: 12px; color: var(--muted); }
+  .tile b { font-size: 21px; font-variant-numeric: tabular-nums; }
+  .tile .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: 0; }
+  .hero { background: #fff; border-radius: 22px; padding: 16px 18px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .hero small { font-size: 13px; color: var(--muted); }
+  .hero .big { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 6px; }
+  .hero .sub { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .hero .sub b { color: var(--ink); }
+  .chg-up { color: var(--expense); font-weight: 700; }
+  .chg-down { color: var(--income); font-weight: 700; }
+  .chart-card { background: #fff; border-radius: 22px; padding: 14px 12px 10px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); padding: 0 4px 6px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+  .readout { min-height: 40px; padding: 2px 4px 8px; font-size: 13px; color: var(--muted); }
+  .readout b { color: var(--ink); font-size: 15px; }
+  .chart-card svg { display: block; width: 100%; height: auto; }
+  .chart-card svg text { font-size: 10px; fill: var(--muted); font-family: inherit; }
+  table.mt { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+  table.mt th { font-weight: 600; color: var(--muted); font-size: 12px; text-align: right; padding: 6px 4px; }
+  table.mt td { text-align: right; padding: 9px 4px; border-top: 1px solid #F1ECE2; }
+  table.mt th:first-child, table.mt td:first-child { text-align: left; }
+  table.mt td.neg { color: var(--expense); }
+  table.mt tr.sel td { background: #FDF3E8; }
+  .crow { width: 100%; text-align: left; display: block; padding: 11px 0; border-top: 1px solid #F1ECE2; }
+  .crow:first-child { border-top: 0; }
+  .crow .top { display: flex; align-items: center; gap: 10px; }
+  .crow .top .emo { width: 28px; display: grid; place-items: center; color: var(--line); }
+  .crow .top .emo svg { width: 22px; height: 22px; }
+  .crow .top .nm { flex: 1; font-weight: 600; font-size: 15px; }
+  .crow .top .pct { color: var(--muted); font-size: 13px; width: 46px; text-align: right; }
+  .crow .top .am { font-weight: 700; width: 86px; text-align: right; font-variant-numeric: tabular-nums; }
+  .crow .bar { margin: 7px 0 4px 38px; }
+  .crow .meta { margin-left: 38px; font-size: 12px; color: var(--muted); }
+  .crow .detail { display: none; margin: 8px 0 0 38px; background: #FAF6ED; border-radius: 12px; padding: 4px 12px; }
+  .crow.open .detail { display: block; }
+  .drow { display: flex; gap: 10px; font-size: 13px; padding: 7px 0; border-top: 1px dashed #E6DFD2; }
+  .drow:first-child { border-top: 0; }
+  .drow .d { color: var(--muted); width: 44px; flex: none; }
+  .drow .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .drow .a { font-variant-numeric: tabular-nums; }
   .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
     padding: 6px; z-index: 25; display: none; min-width: 150px; }
   .menu.show { display: block; }
   .menu button { display: block; width: 100%; text-align: left; padding: 11px 12px; border-radius: 10px; font-size: 14px; }
   .menu button:active { background: var(--blue-soft); }
-  .toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 70px); transform: translateX(-50%); background: var(--ink); color: #fff;
+  .toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 108px); transform: translateX(-50%); background: var(--ink); color: #fff;
     padding: 9px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: .3s; pointer-events: none; z-index: 60; }
   .toast.show { opacity: 1; }
 </style>
@@ -184,12 +236,12 @@
 <div class="wrap" style="position:relative">
   <header>
     <div class="brand"><img src="icons/icon-192.png" alt="">小錢包</div>
-    <button class="icon-btn" id="menuBtn" aria-label="選單">⋯</button>
+    <div class="hdr-btns"><button class="icon-btn" id="anaBtn" aria-label="分析"></button><button class="icon-btn" id="menuBtn" aria-label="選單">⋯</button></div>
   </header>
   <div class="menu" id="menu">
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 4</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 5</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -210,7 +262,7 @@
     </div>
   </div>
 
-  <h2>支出分類</h2>
+  <h2>支出分類 <button class="see-more" id="seeCat">看分析 ›</button></h2>
   <div class="panel" id="catPanel"></div>
 
   <h2>明細</h2>
@@ -263,6 +315,19 @@
       <button class="op" data-k="−">−</button>
     </div>
   </div>
+</section>
+
+<!-- 分析 -->
+<section class="ana" id="ana" aria-hidden="true">
+  <div class="topbar">
+    <button class="tb" id="anaBack" aria-label="返回"></button>
+    <div class="seg" id="anaSeg">
+      <button data-v="month" class="on">每月收支</button>
+      <button data-v="cat">支出細項</button>
+    </div>
+    <span class="tb"></span>
+  </div>
+  <div class="ana-body" id="anaBody"></div>
 </section>
 
 <div class="toast" id="toast"></div>
@@ -458,7 +523,7 @@ $("backKey").innerHTML = svg("del", 2.2);
 
 $("addBtn").onclick = () => openAdd();
 $("backBtn").onclick = closeAdd;
-$("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t || t === form.type) return; form.type = t; form.cat = CATS[t][0][0]; renderCats(); };
+$("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t || t === form.type) return; form.type = t; if (!CATS[t].some((c) => c[0] === form.cat)) form.cat = CATS[t][0][0]; renderCats(); };
 $("cats").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; form.cat = b.dataset.c; renderCats(); };
 $("chips").onclick = (e) => { const b = e.target.closest("button"); if (b) $("note").value = b.textContent; };
 $("note").addEventListener("keydown", (e) => { if (e.key === "Enter") e.target.blur(); });
@@ -496,13 +561,154 @@ $("importFile").onchange = async (e) => {
 };
 $("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄嗎？這個動作無法復原。")) { records = []; save(); render(); toast("已清除"); } };
 
+// ── 分析 ──
+const C_IN = "#5B7BB8", C_OUT = "#E5814F";
+let ana = { view: "month", year: new Date().getFullYear(), sel: new Date().getMonth(), ym: null, open: null };
+const sum = (rows, t) => rows.filter((r) => r.type === t).reduce((s, r) => s + r.amount, 0);
+const ymKey = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
+const short = (n) => n >= 10000 ? (Math.round(n / 1000) / 10) + "萬" : Math.round(n).toLocaleString("zh-TW");
+function niceMax(v) { if (v <= 0) return 1000; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+
+function openAna(v, ymDate) {
+  ana.view = v || "month";
+  if (ymDate) { ana.ym = new Date(ymDate.getFullYear(), ymDate.getMonth(), 1); ana.year = ymDate.getFullYear(); ana.sel = ymDate.getMonth(); }
+  if (!ana.ym) ana.ym = new Date(view.getFullYear(), view.getMonth(), 1);
+  ana.open = null;
+  renderAna();
+  $("ana").classList.add("open"); $("ana").setAttribute("aria-hidden", "false");
+  $("anaBody").scrollTop = 0;
+}
+function closeAna() { $("ana").classList.remove("open"); $("ana").setAttribute("aria-hidden", "true"); }
+
+function renderAna() {
+  document.querySelectorAll("#anaSeg button").forEach((b) => b.classList.toggle("on", b.dataset.v === ana.view));
+  $("anaBody").innerHTML = ana.view === "month" ? monthView() : catView();
+}
+
+function monthView() {
+  const y = ana.year;
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const rows = records.filter((r) => r.date.startsWith(`${y}-${pad2(i + 1)}`));
+    return { i, n: rows.length, inc: sum(rows, "in"), exp: sum(rows, "out") };
+  });
+  const yi = months.reduce((s, m) => s + m.inc, 0), ye = months.reduce((s, m) => s + m.exp, 0);
+  const active = months.filter((m) => m.n).length;
+  const max = niceMax(Math.max(...months.map((m) => Math.max(m.inc, m.exp))));
+  // 長條圖
+  const W = 340, H = 170, L = 34, B = 20, T = 8, gw = (W - L) / 12, bw = Math.min(9, gw / 2 - 2);
+  const yy = (v) => T + (H - T - B) * (1 - v / max);
+  const bar = (x, v, c) => {
+    if (v <= 0) return "";
+    const top = yy(v), h = (H - B) - top, r = Math.min(3, h);
+    return `<path d="M${x},${H - B}V${top + r}q0,-${r} ${r},-${r}h${bw - 2 * r}q${r},0 ${r},${r}V${H - B}z" fill="${c}"/>`;
+  };
+  let g = "";
+  [0, 0.5, 1].forEach((f) => {
+    const v = max * f, yv = yy(v);
+    g += `<line x1="${L}" x2="${W}" y1="${yv}" y2="${yv}" stroke="${f ? "#EFEAE0" : "#C9C3B8"}" stroke-width="1"/>
+      <text x="${L - 5}" y="${yv + 3.5}" text-anchor="end">${short(v)}</text>`;
+  });
+  months.forEach((m) => {
+    const x0 = L + gw * m.i, cx = x0 + gw / 2;
+    if (m.i === ana.sel) g += `<rect x="${x0 + 1}" y="${T}" width="${gw - 2}" height="${H - T - B}" rx="6" fill="#FDF0E3"/>`;
+    g += bar(cx - bw - 1, m.inc, C_IN) + bar(cx + 1, m.exp, C_OUT);
+    g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" ${m.i === ana.sel ? 'style="fill:var(--ink);font-weight:700"' : ""}>${m.i + 1}月</text>`;
+    g += `<rect class="hit" data-m="${m.i}" x="${x0}" y="0" width="${gw}" height="${H}" fill="transparent"/>`;
+  });
+  const s = months[ana.sel];
+  const net = s.inc - s.exp;
+  return `
+  <div class="month"><button data-y="-1">‹</button><span>${y} 年</span><button data-y="1">›</button></div>
+  <div class="tiles">
+    <div class="tile"><small><span class="sw" style="background:${C_IN}"></span>全年收入</small><b>${money(yi)}</b></div>
+    <div class="tile"><small><span class="sw" style="background:${C_OUT}"></span>全年支出</small><b>${money(ye)}</b></div>
+    <div class="tile"><small>全年結餘</small><b ${yi - ye < 0 ? 'class="chg-up"' : ""}>${yi - ye < 0 ? "-" : ""}${money(Math.abs(yi - ye))}</b></div>
+    <div class="tile"><small>平均每月支出</small><b>${money(active ? ye / active : 0)}</b></div>
+  </div>
+  <h2>每月收入與支出</h2>
+  <div class="chart-card">
+    <div class="legend"><span><i style="background:${C_IN}"></i>收入</span><span><i style="background:${C_OUT}"></i>支出</span></div>
+    <div class="readout"><b>${s.i + 1} 月</b>　收入 <b>${money(s.inc)}</b>　支出 <b>${money(s.exp)}</b>　結餘 <b ${net < 0 ? 'class="chg-up"' : ""}>${net < 0 ? "-" : ""}${money(Math.abs(net))}</b></div>
+    <svg viewBox="0 0 ${W} ${H}" id="mChart" role="img" aria-label="${y} 年每月收入與支出長條圖">${g}</svg>
+  </div>
+  <h2>每月明細表</h2>
+  <div class="panel" style="padding:6px 14px">
+    <table class="mt"><thead><tr><th>月份</th><th>收入</th><th>支出</th><th>結餘</th></tr></thead><tbody>
+    ${months.map((m) => `<tr data-m="${m.i}" class="${m.i === ana.sel ? "sel" : ""}"><td>${m.i + 1} 月</td>
+      <td>${m.n ? money(m.inc) : "—"}</td><td>${m.n ? money(m.exp) : "—"}</td>
+      <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? (m.inc - m.exp < 0 ? "-" : "") + money(Math.abs(m.inc - m.exp)) : "—"}</td></tr>`).join("")}
+    </tbody></table>
+  </div>`;
+}
+
+function catView() {
+  const d = ana.ym, key = ymKey(d), prevKey = ymKey(new Date(d.getFullYear(), d.getMonth() - 1, 1));
+  const rows = records.filter((r) => r.type === "out" && r.date.startsWith(key));
+  const prev = records.filter((r) => r.type === "out" && r.date.startsWith(prevKey));
+  const total = rows.reduce((s, r) => s + r.amount, 0), ptotal = prev.reduce((s, r) => s + r.amount, 0);
+  const isNow = key === ymKey(new Date());
+  const days = isNow ? new Date().getDate() : new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  const chg = (a, b) => {
+    if (!b) return a ? "上月沒有支出" : "";
+    const diff = a - b; if (!diff) return "和上月一樣";
+    const p = Math.abs(diff / b * 100), ps = p < 1 ? "不到 1" : Math.round(p);
+    return `比上月 <span class="${diff > 0 ? "chg-up" : "chg-down"}">${diff > 0 ? "▲ 多" : "▼ 少"} ${money(Math.abs(diff))}（${ps}%）</span>`;
+  };
+  const by = {};
+  rows.forEach((r) => (by[r.cat] = by[r.cat] || []).push(r));
+  const cats = Object.entries(by).map(([c, list]) => ({ c, list, v: list.reduce((s, r) => s + r.amount, 0),
+    pv: prev.filter((r) => r.cat === c).reduce((s, r) => s + r.amount, 0) })).sort((a, b) => b.v - a.v);
+  const max = cats.length ? cats[0].v : 1;
+  const top = cats[0];
+  return `
+  <div class="month"><button data-mo="-1">‹</button><span>${d.getFullYear()} 年 ${d.getMonth() + 1} 月</span><button data-mo="1">›</button></div>
+  <div class="hero">
+    <small>本月支出</small>
+    <div class="big">${money(total)}</div>
+    <div class="sub"><span>${chg(total, ptotal)}</span><span>共 <b>${rows.length}</b> 筆</span><span>日均 <b>${money(Math.round(total / days))}</b></span></div>
+    ${top ? `<div class="sub" style="margin-top:6px"><span>花最多：<b>${top.c}</b>，佔 <b>${Math.round(top.v / total * 100)}%</b></span></div>` : ""}
+  </div>
+  <h2>各分類支出 <span style="font-weight:400;font-size:12px">（點一下看明細）</span></h2>
+  <div class="panel" style="padding:4px 16px">
+  ${cats.length ? cats.map((x) => {
+    const diff = x.v - x.pv;
+    return `<button class="crow ${ana.open === x.c ? "open" : ""}" data-c="${x.c}">
+      <div class="top"><span class="emo">${iconOf(x.c)}</span><span class="nm">${x.c}</span>
+        <span class="pct">${Math.round(x.v / total * 100)}%</span><span class="am">${money(x.v)}</span></div>
+      <div class="bar"><i style="width:${(x.v / max * 100).toFixed(1)}%"></i></div>
+      <div class="meta">${x.list.length} 筆 · ${x.pv ? (diff === 0 ? "和上月一樣" : `比上月${diff > 0 ? "多" : "少"} ${money(Math.abs(diff))}`) : "上月沒有"}</div>
+      <div class="detail">${x.list.sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts).map((r) => {
+        const dt = parse(r.date);
+        return `<div class="drow"><span class="d">${dt.getMonth() + 1}/${dt.getDate()}</span><span class="n">${r.note ? escapeHtml(r.note) : "（無備註）"}</span><span class="a">${money(r.amount)}</span></div>`;
+      }).join("")}</div>
+    </button>`;
+  }).join("") : `<div class="empty">這個月還沒有支出</div>`}
+  </div>`;
+}
+
+$("anaBack").innerHTML = svg("back", 2.4);
+$("anaBtn").innerHTML = svg("invest", 2.2);
+$("anaBtn").onclick = () => openAna("month");
+$("seeCat").onclick = () => openAna("cat", view);
+$("anaBack").onclick = closeAna;
+$("anaSeg").onclick = (e) => { const v = e.target.dataset.v; if (!v) return; ana.view = v; if (!ana.ym) ana.ym = new Date(view); renderAna(); };
+$("anaBody").addEventListener("click", (e) => {
+  const t = e.target.closest("[data-y],[data-mo],[data-m],[data-c]");
+  if (!t) return;
+  if (t.dataset.y) { ana.year += +t.dataset.y; }
+  else if (t.dataset.mo) { ana.ym = new Date(ana.ym.getFullYear(), ana.ym.getMonth() + +t.dataset.mo, 1); ana.open = null; }
+  else if (t.dataset.m !== undefined) { ana.sel = +t.dataset.m; }
+  else if (t.dataset.c) { ana.open = ana.open === t.dataset.c ? null : t.dataset.c; }
+  const st = $("anaBody").scrollTop; renderAna(); $("anaBody").scrollTop = st;
+});
+
 render();
 setTimeout(() => $("splash").classList.add("hide"), 1400);
 
 // 有新版就自動換上並重新整理
 if ("serviceWorker" in navigator) {
-  let reloaded = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded) { reloaded = true; location.reload(); } });
+  let reloaded = false; const hadOld = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadOld && !reloaded) { reloaded = true; location.reload(); } });
   navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((r) => r.update()).catch(() => {});
 }
 </script>
