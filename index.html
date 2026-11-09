@@ -106,6 +106,15 @@
     width: 68px; height: 68px; border-radius: 50%; background: var(--gold); border: 3px solid #C8923A;
     box-shadow: 0 6px 16px rgba(201,146,58,.4), inset 0 0 0 5px #F3CF86; font-size: 34px; color: #8A5A16; font-weight: 700; z-index: 10; }
   .fab:active { transform: scale(.94); }
+  /* 回到頂部 */
+  .totop { position: absolute; right: max(16px, calc(50% - 264px)); bottom: calc(env(safe-area-inset-bottom) + 26px);
+    width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 2.5px solid var(--ink); color: var(--ink);
+    display: grid; place-items: center; box-shadow: 0 3px 10px rgba(47,62,92,.18); pointer-events: auto;
+    opacity: 0; transform: translateY(12px); visibility: hidden; transition: opacity .2s, transform .2s, visibility .2s; }
+  .totop.show { opacity: 1; transform: none; visibility: visible; }
+  .totop svg { width: 24px; height: 24px; }
+  .totop:active { transform: scale(.92); }
+  .ana .totop { position: absolute; z-index: 5; }
 
   .coin svg { width: 22px; height: 22px; }
 
@@ -438,7 +447,7 @@
     <button id="importBtn">匯入備份</button>
     <button id="syncBtn">☁︎ 雲端同步</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 18</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 19</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -464,7 +473,7 @@
   <div id="list"></div>
 </div>
 
-<div class="fabbar"><button class="fab" id="addBtn" aria-label="記一筆">＋</button></div>
+<div class="fabbar"><button class="fab" id="addBtn" aria-label="記一筆">＋</button><button class="totop" id="topMain" aria-label="回到頂部"></button></div>
 
 <!-- 記一筆 -->
 <section class="add" id="add" aria-hidden="true">
@@ -525,6 +534,7 @@
     <span class="tb"></span>
   </div>
   <div class="ana-body" id="anaBody"></div>
+  <button class="totop" id="topAna" aria-label="回到頂部"></button>
 </section>
 
 <!-- 預算 -->
@@ -535,6 +545,7 @@
     <button class="tb" id="budAdd" aria-label="新增預算"></button>
   </div>
   <div class="ana-body" id="budBody"></div>
+  <button class="totop" id="topBud" aria-label="回到頂部"></button>
 </section>
 
 <div class="modal" id="budModal">
@@ -631,6 +642,7 @@ const P = {
   pieico:  "M12 3a9 9 0 1 0 9 9h-9zM15 3.5A9 9 0 0 1 20.5 9H15z",
   sort:    "M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4",
   plus:    "M12 5v14M5 12h14",
+  up:      "M12 19V5M5 12l7-7 7 7",
   paw:     "M8 10.5a1.8 2.3 0 1 0 0-.01zM16 10.5a1.8 2.3 0 1 0 0-.01zM5 14a1.6 2 0 1 0 0-.01zM19 14a1.6 2 0 1 0 0-.01zM12 13c-2.5 0-4.5 3-4.5 5a2 2 0 0 0 2.5 2c1-.3 1.4-.6 2-.6s1 .3 2 .6a2 2 0 0 0 2.5-2c0-2-2-5-4.5-5z",
   shirt:   "M8 3 3 6l2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z",
   scissors:"M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.1 7.9 20 18M8.1 16.1 20 6",
@@ -1657,6 +1669,17 @@ $("anaBody").addEventListener("click", (e) => {
   const st = $("anaBody").scrollTop; renderAna(); if (!d.tc || !t.classList.contains("trow")) $("anaBody").scrollTop = st;
 });
 
+// 回到頂部按鈕：捲超過一段距離才出現
+function attachTop(btn, getScroll, toTop, el) {
+  btn.innerHTML = svg("up", 2.6);
+  const upd = () => btn.classList.toggle("show", getScroll() > 400);
+  (el || window).addEventListener("scroll", upd, { passive: true });
+  btn.onclick = () => { toTop(); };
+  upd();
+}
+attachTop($("topMain"), () => window.scrollY, () => window.scrollTo({ top: 0, behavior: "smooth" }));
+attachTop($("topAna"), () => $("anaBody").scrollTop, () => $("anaBody").scrollTo({ top: 0, behavior: "smooth" }), $("anaBody"));
+attachTop($("topBud"), () => $("budBody").scrollTop, () => $("budBody").scrollTo({ top: 0, behavior: "smooth" }), $("budBody"));
 render();
 syncNow();
 setTimeout(() => $("splash").classList.add("hide"), 1400);
