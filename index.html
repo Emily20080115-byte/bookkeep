@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>小錢包記帳</title>
+<meta name="theme-color" content="#FAF6ED">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="小錢包">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+  :root {
+    --bg: #FAF6ED;
+    --card: #FFFFFF;
+    --ink: #2F3E5C;
+    --muted: #8A8F9C;
+    --line: #3E5A8C;
+    --blue: #9DB4E0;
+    --blue-soft: #DCE5F5;
+    --orange: #F2A365;
+    --orange-deep: #E5814F;
+    --gold: #E9B65C;
+    --silver: #D9D6D0;
+    --income: #4E8E6E;
+    --expense: #D9664A;
+    --radius: 22px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+  body { min-height: 100vh; padding: env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 110px); }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+
+  /* 開啟畫面：跟圖示一樣的錢包 */
+  #splash { position: fixed; inset: 0; z-index: 99; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity .5s ease, visibility .5s; }
+  #splash img { width: min(78vw, 360px); animation: float 1.6s ease-in-out infinite; }
+  #splash h1 { position: relative; margin: 6px 0 0; font-size: 26px; letter-spacing: 4px; color: var(--line); }
+  #splash p { margin: 8px 0 0; color: var(--muted); font-size: 14px; letter-spacing: 2px; }
+  #splash.hide { opacity: 0; visibility: hidden; }
+  @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 10px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; color: var(--line); }
+  .brand img { width: 38px; height: 38px; border-radius: 11px; box-shadow: 0 2px 6px rgba(62,90,140,.15); }
+  .icon-btn { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--card); box-shadow: 0 1px 4px rgba(62,90,140,.12); font-size: 18px; }
+
+  .month { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 4px 0 14px; font-weight: 600; }
+  .month button { width: 32px; height: 32px; border-radius: 50%; font-size: 18px; color: var(--line); background: var(--blue-soft); }
+
+  /* 錢包造型的總覽卡 */
+  .wallet { position: relative; background: var(--blue); border: 2.5px solid var(--line); border-radius: var(--radius);
+    padding: 20px 20px 18px; color: #fff; overflow: hidden; }
+  .wallet::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 14px; background: var(--orange); border-bottom: 2.5px solid var(--line); }
+  .wallet .clasp { position: absolute; right: -2px; top: 50%; transform: translateY(-50%); width: 46px; height: 34px;
+    background: var(--blue); border: 2.5px solid var(--line); border-right: 0; border-radius: 18px 0 0 18px; }
+  .wallet .clasp::after { content: ""; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    width: 12px; height: 12px; border-radius: 50%; background: var(--orange); border: 2px solid var(--line); }
+  .wallet .label { margin-top: 10px; font-size: 13px; opacity: .9; color: var(--ink); }
+  .wallet .balance { font-size: 36px; font-weight: 800; color: var(--ink); margin: 2px 0 14px; letter-spacing: .5px; }
+  .pocket { display: flex; gap: 10px; margin-right: 40px; }
+  .pocket div { flex: 1; background: var(--orange); border: 2px solid var(--line); border-radius: 14px; padding: 9px 12px; color: var(--ink); }
+  .pocket small { font-size: 12px; display: block; opacity: .85; }
+  .pocket b { font-size: 17px; }
+
+  h2 { font-size: 15px; color: var(--muted); font-weight: 600; margin: 24px 4px 10px; }
+  .panel { background: var(--card); border-radius: var(--radius); padding: 14px 16px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+
+  .cat-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+  .cat-row .emo { width: 30px; text-align: center; font-size: 19px; }
+  .cat-row .name { width: 52px; font-size: 14px; }
+  .bar { flex: 1; height: 10px; background: var(--blue-soft); border-radius: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--orange); border-radius: 6px; }
+  .cat-row .amt { width: 82px; text-align: right; font-size: 14px; font-variant-numeric: tabular-nums; }
+
+  .day { margin-bottom: 12px; }
+  .day-head { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 0 6px 6px; }
+  .item { display: flex; align-items: center; gap: 12px; padding: 11px 4px; border-bottom: 1px solid #F1ECE2; width: 100%; text-align: left; }
+  .item:last-child { border-bottom: 0; }
+  .coin { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; flex: none;
+    background: #FBE7C8; border: 2px solid var(--gold); }
+  .item.in .coin { background: #E2EDE4; border-color: #9BC3A9; }
+  .item .info { flex: 1; min-width: 0; }
+  .item .info b { font-weight: 600; font-size: 15px; display: block; }
+  .item .info small { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .item .money { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--expense); }
+  .item.in .money { color: var(--income); }
+
+  .empty { text-align: center; color: var(--muted); padding: 26px 0 14px; font-size: 14px; }
+  .empty img { width: 120px; opacity: .85; display: block; margin: 0 auto 6px; }
+
+  /* 金幣新增按鈕 */
+  .fab { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom) + 24px);
+    width: 68px; height: 68px; border-radius: 50%; background: var(--gold); border: 3px solid #C8923A;
+    box-shadow: 0 6px 16px rgba(201,146,58,.4), inset 0 0 0 5px #F3CF86; font-size: 34px; color: #8A5A16; font-weight: 700; z-index: 10; }
+  .fab:active { transform: translateX(-50%) scale(.94); }
+
+  /* 底部表單 */
+  .mask { position: fixed; inset: 0; background: rgba(47,62,92,.35); opacity: 0; visibility: hidden; transition: .25s; z-index: 20; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--bg); border-radius: 26px 26px 0 0;
+    padding: 10px 16px calc(env(safe-area-inset-bottom) + 18px); transform: translateY(105%); transition: transform .3s ease;
+    max-width: 520px; margin: 0 auto; max-height: 92vh; overflow-y: auto; }
+  .open .mask { opacity: 1; visibility: visible; }
+  .open .sheet { transform: translateY(0); }
+  .grip { width: 42px; height: 5px; border-radius: 3px; background: #DCD5C7; margin: 0 auto 12px; }
+  .seg { display: flex; background: var(--blue-soft); border-radius: 14px; padding: 4px; }
+  .seg button { flex: 1; padding: 9px; border-radius: 11px; font-weight: 600; color: var(--line); }
+  .seg button.on { background: #fff; box-shadow: 0 1px 4px rgba(62,90,140,.15); }
+  .seg button.on[data-t="out"] { color: var(--expense); }
+  .seg button.on[data-t="in"] { color: var(--income); }
+  .amount { display: flex; align-items: center; gap: 6px; margin: 16px 0 8px; background: #fff; border-radius: 18px; padding: 8px 16px; border: 2px solid var(--blue-soft); }
+  .amount span { font-size: 22px; color: var(--muted); }
+  .amount input { flex: 1; min-width: 0; border: 0; outline: 0; font-size: 34px; font-weight: 800; color: var(--ink); background: none; text-align: right; }
+  .cats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; }
+  .cats button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0; border-radius: 14px; font-size: 12px; background: #fff; border: 2px solid transparent; }
+  .cats button em { font-style: normal; font-size: 22px; }
+  .cats button.on { border-color: var(--orange); background: #FDF0E3; }
+  .field { display: flex; gap: 8px; margin-bottom: 10px; }
+  .field input { flex: 1; min-width: 0; border: 2px solid var(--blue-soft); background: #fff; border-radius: 14px; padding: 12px 14px; font: inherit; color: var(--ink); outline: 0; }
+  .field input[type=date] { flex: 0 0 150px; }
+  .actions { display: flex; gap: 10px; margin-top: 6px; }
+  .save { flex: 1; background: var(--line); color: #fff; border-radius: 16px; padding: 15px; font-weight: 700; font-size: 16px; }
+  .del { background: #F6DED6; color: var(--expense); border-radius: 16px; padding: 15px 18px; font-weight: 600; }
+
+  .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
+    padding: 6px; z-index: 30; display: none; min-width: 150px; }
+  .menu.show { display: block; }
+  .menu button { display: block; width: 100%; text-align: left; padding: 11px 12px; border-radius: 10px; font-size: 14px; }
+  .menu button:active { background: var(--blue-soft); }
+  .toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: var(--ink); color: #fff;
+    padding: 9px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: .3s; pointer-events: none; z-index: 40; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <img src="icons/icon-512.png" alt="">
+  <h1>小錢包記帳</h1>
+  <p>每一枚硬幣都算數</p>
+</div>
+
+<div class="wrap" style="position:relative">
+  <header>
+    <div class="brand"><img src="icons/icon-192.png" alt="">小錢包</div>
+    <button class="icon-btn" id="menuBtn" aria-label="選單">⋯</button>
+  </header>
+  <div class="menu" id="menu">
+    <button id="exportBtn">📤 匯出備份</button>
+    <button id="importBtn">📥 匯入備份</button>
+    <button id="clearBtn" style="color:var(--expense)">🗑️ 清除全部資料</button>
+  </div>
+  <input type="file" id="importFile" accept="application/json" hidden>
+
+  <div class="month">
+    <button id="prev" aria-label="上個月">‹</button>
+    <span id="monthLabel"></span>
+    <button id="next" aria-label="下個月">›</button>
+  </div>
+
+  <div class="wallet">
+    <div class="clasp"></div>
+    <div class="label">本月結餘</div>
+    <div class="balance" id="balance">$0</div>
+    <div class="pocket">
+      <div><small>收入</small><b id="incomeSum">$0</b></div>
+      <div><small>支出</small><b id="expenseSum">$0</b></div>
+    </div>
+  </div>
+
+  <h2>支出分類</h2>
+  <div class="panel" id="catPanel"></div>
+
+  <h2>明細</h2>
+  <div id="list"></div>
+</div>
+
+<button class="fab" id="addBtn" aria-label="記一筆">＋</button>
+
+<div id="sheetWrap">
+  <div class="mask" id="mask"></div>
+  <div class="sheet">
+    <div class="grip"></div>
+    <div class="seg" id="seg">
+      <button data-t="out" class="on">支出</button>
+      <button data-t="in">收入</button>
+    </div>
+    <div class="amount"><span>$</span><input id="amt" type="number" inputmode="decimal" placeholder="0" min="0" step="any"></div>
+    <div class="cats" id="cats"></div>
+    <div class="field">
+      <input id="date" type="date">
+      <input id="note" type="text" placeholder="備註（可不填）" maxlength="40">
+    </div>
+    <div class="actions">
+      <button class="del" id="delBtn" hidden>刪除</button>
+      <button class="save" id="saveBtn">存進錢包</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = {
+  out: [["🍱","餐飲"],["🚌","交通"],["🛍️","購物"],["🎮","娛樂"],["🏠","居家"],["📱","通訊"],["💊","醫療"],["📚","學習"],["🎁","禮物"],["✨","其他"]],
+  in:  [["💼","薪水"],["🧧","紅包"],["💰","零用錢"],["📈","投資"],["🏆","獎金"],["🔁","退款"],["✨","其他"]]
+};
+const KEY = "wallet-records-v1";
+const $ = (id) => document.getElementById(id);
+
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(records)); } catch { toast("儲存失敗，請檢查瀏覽器設定"); } }
+
+let records = load();
+let view = new Date(); view.setDate(1);
+let form = { type: "out", cat: "餐飲", id: null };
+
+const money = (n) => "$" + Math.round(n).toLocaleString("zh-TW");
+const pad = (n) => String(n).padStart(2, "0");
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const emojiOf = (type, cat) => (CATS[type].find((c) => c[1] === cat) || ["✨"])[0];
+const WEEK = "日一二三四五六";
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
+
+function render() {
+  const ym = `${view.getFullYear()}-${pad(view.getMonth()+1)}`;
+  $("monthLabel").textContent = `${view.getFullYear()} 年 ${view.getMonth()+1} 月`;
+  const rows = records.filter((r) => r.date.startsWith(ym)).sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts);
+  const inc = rows.filter((r) => r.type === "in").reduce((s, r) => s + r.amount, 0);
+  const exp = rows.filter((r) => r.type === "out").reduce((s, r) => s + r.amount, 0);
+  $("balance").textContent = (inc - exp < 0 ? "-" : "") + money(Math.abs(inc - exp));
+  $("incomeSum").textContent = money(inc);
+  $("expenseSum").textContent = money(exp);
+
+  // 分類統計
+  const byCat = {};
+  rows.filter((r) => r.type === "out").forEach((r) => byCat[r.cat] = (byCat[r.cat] || 0) + r.amount);
+  const cats = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+  const max = cats.length ? cats[0][1] : 1;
+  $("catPanel").innerHTML = cats.length
+    ? cats.map(([c, v]) => `<div class="cat-row"><span class="emo">${emojiOf("out", c)}</span><span class="name">${c}</span>
+        <span class="bar"><i style="width:${(v / max * 100).toFixed(1)}%"></i></span><span class="amt">${money(v)}</span></div>`).join("")
+    : `<div class="empty" style="padding:10px 0">這個月還沒有支出 🎉</div>`;
+
+  // 明細（依日期分組）
+  if (!rows.length) {
+    $("list").innerHTML = `<div class="panel empty"><img src="icons/icon-192.png" alt="">錢包空空的，按下方金幣記第一筆吧！</div>`;
+    return;
+  }
+  const groups = {};
+  rows.forEach((r) => (groups[r.date] = groups[r.date] || []).push(r));
+  $("list").innerHTML = Object.entries(groups).map(([d, items]) => {
+    const dt = new Date(d + "T00:00");
+    const net = items.reduce((s, r) => s + (r.type === "in" ? r.amount : -r.amount), 0);
+    return `<div class="day"><div class="day-head"><span>${dt.getMonth()+1}/${dt.getDate()}（${WEEK[dt.getDay()]}）</span>
+      <span>${net >= 0 ? "+" : "-"}${money(Math.abs(net))}</span></div><div class="panel" style="padding:4px 14px">` +
+      items.map((r) => `<button class="item ${r.type}" data-id="${r.id}"><span class="coin">${emojiOf(r.type, r.cat)}</span>
+        <span class="info"><b>${r.cat}</b>${r.note ? `<small>${escapeHtml(r.note)}</small>` : ""}</span>
+        <span class="money">${r.type === "in" ? "+" : "-"}${money(r.amount)}</span></button>`).join("") + `</div></div>`;
+  }).join("");
+}
+
+function escapeHtml(s) { return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+function renderCats() {
+  $("cats").innerHTML = CATS[form.type].map(([e, n]) => `<button data-c="${n}" class="${n === form.cat ? "on" : ""}"><em>${e}</em>${n}</button>`).join("");
+  document.querySelectorAll("#seg button").forEach((b) => b.classList.toggle("on", b.dataset.t === form.type));
+}
+
+function openSheet(rec) {
+  if (rec) {
+    form = { type: rec.type, cat: rec.cat, id: rec.id };
+    $("amt").value = rec.amount; $("date").value = rec.date; $("note").value = rec.note || "";
+  } else {
+    form = { type: "out", cat: CATS.out[0][1], id: null };
+    $("amt").value = ""; $("date").value = today(); $("note").value = "";
+  }
+  $("delBtn").hidden = !rec;
+  $("saveBtn").textContent = rec ? "更新" : "存進錢包";
+  renderCats();
+  $("sheetWrap").classList.add("open");
+  if (!rec) setTimeout(() => $("amt").focus(), 250);
+}
+function closeSheet() { $("sheetWrap").classList.remove("open"); document.activeElement.blur(); }
+
+$("addBtn").onclick = () => openSheet();
+$("mask").onclick = closeSheet;
+$("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t) return; form.type = t; form.cat = CATS[t][0][1]; renderCats(); };
+$("cats").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; form.cat = b.dataset.c; renderCats(); };
+$("list").onclick = (e) => { const b = e.target.closest(".item"); if (b) openSheet(records.find((r) => r.id === b.dataset.id)); };
+
+$("saveBtn").onclick = () => {
+  const amount = parseFloat($("amt").value);
+  if (!(amount > 0)) { toast("請輸入金額"); $("amt").focus(); return; }
+  const data = { type: form.type, cat: form.cat, amount, date: $("date").value || today(), note: $("note").value.trim() };
+  if (form.id) Object.assign(records.find((r) => r.id === form.id), data);
+  else records.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ts: Date.now(), ...data });
+  save();
+  const d = new Date(data.date + "T00:00"); view = new Date(d.getFullYear(), d.getMonth(), 1);
+  render(); closeSheet(); toast(form.id ? "已更新" : "叮！存好了 🪙");
+};
+$("delBtn").onclick = () => {
+  if (!confirm("確定要刪除這筆嗎？")) return;
+  records = records.filter((r) => r.id !== form.id); save(); render(); closeSheet(); toast("已刪除");
+};
+
+$("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
+$("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
+
+// 選單：備份
+$("menuBtn").onclick = (e) => { e.stopPropagation(); $("menu").classList.toggle("show"); };
+document.addEventListener("click", () => $("menu").classList.remove("show"));
+$("exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `小錢包備份-${today()}.json`; a.click();
+  toast("備份已下載");
+};
+$("importBtn").onclick = () => $("importFile").click();
+$("importFile").onchange = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const data = JSON.parse(await f.text());
+    if (!Array.isArray(data)) throw 0;
+    const ids = new Set(records.map((r) => r.id));
+    records = records.concat(data.filter((r) => r && r.id && !ids.has(r.id) && r.amount > 0 && r.date));
+    save(); render(); toast("匯入完成");
+  } catch { toast("檔案格式不對"); }
+  e.target.value = "";
+};
+$("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄嗎？這個動作無法復原。")) { records = []; save(); render(); toast("已清除"); } };
+
+render();
+setTimeout(() => $("splash").classList.add("hide"), 1400);
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
