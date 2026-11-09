@@ -400,7 +400,7 @@
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 10</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 11</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -608,8 +608,11 @@ const CAT_COLOR = {
   "醫療": "#008300", "學習": "#0E8FB0", "通訊": "#7F8FA6", "禮物": "#B8338A",
   "薪水": "#2A78D6", "獎金": "#EDA100", "零用錢": "#1BAF7A", "投資": "#008300", "紅包": "#E34948", "退款": "#6250D6"
 };
-const C_FOOD = "#EB6834", C_OTHERCAT = "#A8A39A";
-const colorOf = (cat) => FOOD_CATS.includes(cat) ? C_FOOD : (CAT_COLOR[cat] || C_OTHERCAT);
+// 三餐：淺橘→深橘（早→晚）；飲品淺黃、點心深黃
+const FOOD_SHADE = { "早餐": "#F7B27A", "午餐": "#EE8A45", "餐飲": "#EE8A45", "晚餐": "#C8561E", "飲品": "#F6D66B", "點心": "#DDA200" };
+const FOOD_ORDER = ["早餐", "午餐", "晚餐", "飲品", "點心"];
+const C_FOOD = "#EE8A45", C_OTHERCAT = "#A8A39A";
+const colorOf = (cat) => FOOD_SHADE[cat] || (FOOD_CATS.includes(cat) ? C_FOOD : (CAT_COLOR[cat] || C_OTHERCAT));
 // 依現在時間猜是哪一餐
 function mealByTime(d = new Date()) {
   const h = d.getHours() + d.getMinutes() / 60;
@@ -981,7 +984,9 @@ function catView2() {
   // 圓餅圖：吃的排在一起，整塊依總額排序
   const foodSum = cats.filter((x) => FOOD_CATS.includes(x.c)).reduce((s, x) => s + x.v, 0);
   const gv = (x) => FOOD_CATS.includes(x.c) ? foodSum : x.v;
-  const segs = [...cats].sort((a, b) => gv(b) - gv(a) || (FOOD_CATS.includes(b.c) - FOOD_CATS.includes(a.c)) || b.v - a.v);
+  const fo = (c) => { const i = FOOD_ORDER.indexOf(c); return i < 0 ? 99 : i; };
+  const segs = [...cats].sort((a, b) => gv(b) - gv(a) || (FOOD_CATS.includes(b.c) - FOOD_CATS.includes(a.c)) ||
+    (FOOD_CATS.includes(a.c) ? fo(a.c) - fo(b.c) : 0) || b.v - a.v);
   if (!total) return `<div class="bcard empty" style="padding:30px 0">這段期間沒有${word}紀錄</div>`;
 
   let chart;
