@@ -98,16 +98,20 @@
   .empty img { width: 120px; opacity: .85; display: block; margin: 0 auto 6px; }
 
   /* 金幣新增按鈕 */
-  .fab { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom) + 24px);
+  /* 底部固定列：「＋」永遠在螢幕最下面 */
+  .fabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; justify-content: center;
+    padding: 12px 0 calc(env(safe-area-inset-bottom) + 18px); pointer-events: none;
+    background: linear-gradient(to bottom, rgba(250,246,237,0), rgba(250,246,237,.92) 45%); }
+  .fab { position: relative; pointer-events: auto;
     width: 68px; height: 68px; border-radius: 50%; background: var(--gold); border: 3px solid #C8923A;
     box-shadow: 0 6px 16px rgba(201,146,58,.4), inset 0 0 0 5px #F3CF86; font-size: 34px; color: #8A5A16; font-weight: 700; z-index: 10; }
-  .fab:active { transform: translateX(-50%) scale(.94); }
+  .fab:active { transform: scale(.94); }
 
   .coin svg { width: 22px; height: 22px; }
 
   /* 打開整頁畫面時，主畫面不顯示也不捲動 */
   body.lock { overflow: hidden; }
-  body.lock .wrap, body.lock .fab { visibility: hidden; }
+  body.lock .wrap, body.lock .fabbar { visibility: hidden; }
   .ana-body, .cats { overscroll-behavior: contain; }
   /* ── 記一筆：整頁 ── */
   .add { position: fixed; inset: 0; height: 100vh; height: 100dvh; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
@@ -434,7 +438,7 @@
     <button id="importBtn">匯入備份</button>
     <button id="syncBtn">☁︎ 雲端同步</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 17</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 18</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -460,7 +464,7 @@
   <div id="list"></div>
 </div>
 
-<button class="fab" id="addBtn" aria-label="記一筆">＋</button>
+<div class="fabbar"><button class="fab" id="addBtn" aria-label="記一筆">＋</button></div>
 
 <!-- 記一筆 -->
 <section class="add" id="add" aria-hidden="true">
