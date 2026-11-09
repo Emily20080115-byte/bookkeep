@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>小錢包記帳</title>
-<meta name="theme-color" content="#FAF6ED">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon-32.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
   :root {
-    --bg: #FAF6ED;
+    --bg: #FFFFFF;
     --card: #FFFFFF;
     --ink: #2F3E5C;
     --muted: #8A8F9C;
@@ -37,7 +37,7 @@
   .wrap { max-width: 520px; margin: 0 auto; padding: 0 16px; }
 
   /* 開啟畫面：跟圖示一樣的錢包 */
-  #splash { position: fixed; inset: 0; z-index: 99; background: var(--bg);
+  #splash { position: fixed; inset: 0; z-index: 99; background: #FAF6ED;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity .5s ease, visibility .5s; }
   #splash img { width: min(78vw, 360px); animation: float 1.6s ease-in-out infinite; }
@@ -71,7 +71,7 @@
   .pocket b { font-size: 17px; }
 
   h2 { font-size: 15px; color: var(--muted); font-weight: 600; margin: 24px 4px 10px; }
-  .panel { background: var(--card); border-radius: var(--radius); padding: 14px 16px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .panel { background: var(--card); border: 1.5px solid #ECE5D8; border-radius: var(--radius); padding: 14px 16px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
 
   .cat-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
   .cat-row .emo { width: 30px; display: grid; place-items: center; color: var(--line); }
@@ -101,7 +101,7 @@
   /* 底部固定列：「＋」永遠在螢幕最下面 */
   .fabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; justify-content: center;
     padding: 12px 0 calc(env(safe-area-inset-bottom) + 18px); pointer-events: none;
-    background: linear-gradient(to bottom, rgba(250,246,237,0), rgba(250,246,237,.92) 45%); }
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.95) 45%); }
   .fab { position: relative; pointer-events: auto;
     width: 68px; height: 68px; border-radius: 50%; background: var(--gold); border: 3px solid #C8923A;
     box-shadow: 0 6px 16px rgba(201,146,58,.4), inset 0 0 0 5px #F3CF86; font-size: 34px; color: #8A5A16; font-weight: 700; z-index: 10; }
@@ -196,7 +196,7 @@
   .ana-body { flex: 1; overflow-y: auto; padding: 14px max(16px, calc(50% - 280px)) calc(env(safe-area-inset-bottom) + 30px); -webkit-overflow-scrolling: touch; }
   .ana-body .month { margin-top: 0; }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .tile { background: #fff; border-radius: 18px; padding: 12px 14px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .tile { background: #fff; border: 1.5px solid #ECE5D8; border-radius: 18px; padding: 12px 14px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
   .tile small { display: block; font-size: 12px; color: var(--muted); }
   .tile b { font-size: 21px; font-variant-numeric: tabular-nums; }
   .tile .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: 0; }
@@ -207,7 +207,7 @@
   .hero .sub b { color: var(--ink); }
   .chg-up { color: var(--expense); font-weight: 700; }
   .chg-down { color: var(--income); font-weight: 700; }
-  .chart-card { background: #fff; border-radius: 22px; padding: 14px 12px 10px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
+  .chart-card { background: #fff; border: 1.5px solid #ECE5D8; border-radius: 22px; padding: 14px 12px 10px; box-shadow: 0 1px 6px rgba(62,90,140,.08); }
   .legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); padding: 0 4px 6px; }
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
   .readout { min-height: 40px; padding: 2px 4px 8px; font-size: 13px; color: var(--muted); }
@@ -447,7 +447,7 @@
     <button id="importBtn">匯入備份</button>
     <button id="syncBtn">☁︎ 雲端同步</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 19</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 20</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
