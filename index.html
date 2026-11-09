@@ -127,7 +127,7 @@
   .ic { position: relative; width: 40px; height: 40px; display: grid; place-items: center; }
   .ic svg { position: relative; z-index: 1; width: 34px; height: 34px; }
   .ic::before { content: ""; position: absolute; right: -2px; bottom: -2px; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--orange); transform: scale(0); transition: transform .15s; z-index: 0; opacity: .85; }
+    background: var(--orange); transform: scale(0); transition: transform .15s; z-index: 0; }
   .on .ic::before, .ic.dot::before { transform: scale(1); }
   .ic[style*="--dot"]::before { background: var(--dot); }
   .cats button.on { font-weight: 700; }
@@ -414,7 +414,7 @@
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 13</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 14</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
