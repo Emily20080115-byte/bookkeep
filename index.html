@@ -231,6 +231,8 @@
   .mbar .lg { display: flex; align-items: center; gap: 8px; }
   .tb2 { width: 42px; height: 42px; display: grid; place-items: center; color: var(--ink); }
   .tb2 svg { width: 26px; height: 26px; }
+  .streak[hidden] { display: none !important; }
+  .steps { margin: 0 0 12px; padding-left: 20px; font-size: 14px; line-height: 1.7; }
   .streak { display: flex; align-items: center; gap: 3px; background: #F1ECE2; border-radius: 16px; padding: 5px 10px 5px 7px;
     font-weight: 700; font-size: 15px; }
   .streak svg { width: 18px; height: 18px; color: var(--orange-deep); }
@@ -417,8 +419,9 @@
   <div class="menu left" id="menu">
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
+    <button id="syncBtn">☁︎ 雲端同步</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 15</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 16</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -545,6 +548,35 @@
   <input type="file" id="scanFile" accept="image/*" capture="environment" hidden>
 </div>
 
+<div class="modal" id="syncModal">
+  <div class="box">
+    <h3>雲端同步</h3>
+    <p class="hint" style="margin:0 0 10px">在手機、iPad 輸入的帳都會自動同步。資料存在你自己 GitHub 帳號裡的一個「私人 Gist」，只有你看得到。</p>
+    <div id="syOff">
+      <ol class="steps">
+        <li>點下面按鈕到 GitHub 建立金鑰（已幫你勾好需要的權限）</li>
+        <li>「Expiration」選 <b>No expiration</b>，拉到最下面按 <b>Generate token</b></li>
+        <li>複製產生的金鑰（ghp_ 開頭），貼到下面</li>
+        <li>每台裝置都貼<b>同一把</b>金鑰，就會同步</li>
+      </ol>
+      <a class="btn-main" style="text-align:center;text-decoration:none;background:#fff;color:var(--ink);border:2px solid var(--ink)" target="_blank" rel="noopener"
+        href="https://github.com/settings/tokens/new?scopes=gist&description=%E5%B0%8F%E9%8C%A2%E5%8C%85%E8%A8%98%E5%B8%B3">① 到 GitHub 建立金鑰</a>
+      <label for="syToken">② 貼上金鑰</label>
+      <input id="syToken" type="password" autocomplete="off" placeholder="ghp_xxxxxxxx">
+      <p class="hint" style="margin-top:6px">金鑰只存在這台裝置上，請不要給別人。</p>
+      <div class="acts"><button class="btn-main" style="background:transparent;color:var(--ink);border:2px solid var(--ink);flex:0 0 90px" id="syClose">取消</button>
+        <button class="btn-main" id="syConnect">連線並同步</button></div>
+    </div>
+    <div id="syOn" hidden>
+      <div class="bcard" style="padding:14px 16px;margin-bottom:12px"><b>狀態：</b><span id="syncState"></span></div>
+      <p class="hint">打開 App、切回 App、每次記帳後都會自動同步。換新裝置時，在那台裝置貼上同一把金鑰就好。</p>
+      <div class="acts"><button class="del" id="syOff2">中斷同步</button>
+        <button class="btn-main" style="background:transparent;color:var(--ink);border:2px solid var(--ink)" id="syClose2">關閉</button>
+        <button class="btn-main" id="sySyncNow">立即同步</button></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -663,8 +695,9 @@ function applyCustom() {
     if (c.food) { if (!FOOD_CATS.includes(c.name)) FOOD_CATS.push(c.name); } else CAT_COLOR[c.name] = c.color;
   }));
 }
+const BASE_CATS = { out: CATS.out.slice(), in: CATS.in.slice() };
 applyCustom();
-function saveCustom() { try { localStorage.setItem(CKEY, JSON.stringify(customCats)); } catch {} }
+function saveCustom() { try { localStorage.setItem(CKEY, JSON.stringify(customCats)); } catch {} if (typeof touchMeta === "function") touchMeta("cats"); }
 function addCustomCat(type) {
   let name = prompt(type === "out" ? "新增支出分類（最多 6 個字）\n例如：寵物、剪髮、保險" : "新增收入分類（最多 6 個字）\n例如：打工、股利", "");
   if (name === null) return null;
@@ -687,7 +720,7 @@ const iconOf = (cat) => svg((CATS.out.concat(CATS.in).find((c) => c[0] === cat) 
 const KEY = "wallet-records-v1";
 const $ = (id) => document.getElementById(id);
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(records)); } catch { toast("儲存失敗，請檢查瀏覽器設定"); } }
+function save(push = true) { try { localStorage.setItem(KEY, JSON.stringify(records)); } catch { toast("儲存失敗，請檢查瀏覽器設定"); } if (push && typeof schedulePush === "function") schedulePush(); }
 
 let records = load();
 let view = new Date(); view.setDate(1);
@@ -849,6 +882,7 @@ function submit() {
   if (!(amount > 0)) { toast("請先輸入金額"); return; }
   const data = { type: form.type, cat: form.cat, amount, date: form.date || today(), note: $("note").value.trim() };
   if (form.inv) data.inv = form.inv;
+  data.u = Date.now();
   if (form.id) Object.assign(records.find((r) => r.id === form.id), data);
   else records.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ts: Date.now(), ...data });
   save();
@@ -898,6 +932,7 @@ $("date").addEventListener("change", (e) => { if (e.target.value) { form.date = 
 $("list").onclick = (e) => { const b = e.target.closest(".item"); if (b) openAdd(records.find((r) => r.id === b.dataset.id)); };
 $("delBtn").onclick = () => {
   if (!confirm("確定要刪除這筆嗎？")) return;
+  deleted[form.id] = Date.now(); saveDeleted();
   records = records.filter((r) => r.id !== form.id); save(); render(); closeAdd(); toast("已刪除");
 };
 
@@ -943,7 +978,8 @@ $("importFile").onchange = async (e) => {
   e.target.value = "";
 };
 $("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄、預算和起始金額嗎？這個動作無法復原。")) {
-  records = []; budgets = []; startBal = 0; save(); saveBudgets(); try { localStorage.removeItem("wallet-start"); } catch {} render(); toast("已清除"); } };
+  records.forEach((r) => deleted[r.id] = Date.now()); saveDeleted();
+  records = []; budgets = []; startBal = 0; save(); saveBudgets(); try { localStorage.removeItem("wallet-start"); } catch {} touchMeta("start"); render(); toast("已清除"); } };
 
 // ── 分析 ──
 const C_IN = "#5B7BB8", C_OUT = "#E5814F";
@@ -1155,14 +1191,14 @@ $("startBtn").onclick = () => {
   if (v === null) return;
   const n = parseFloat(v.replace(/[,$\s]/g, ""));
   if (!isFinite(n)) { toast("請輸入數字"); return; }
-  startBal = n; try { localStorage.setItem("wallet-start", String(n)); } catch {}
+  startBal = n; try { localStorage.setItem("wallet-start", String(n)); } catch {} touchMeta("start");
   render(); toast("已設定起始金額");
 };
 
 // ── 預算 ──
 const BKEY = "wallet-budgets-v1";
 let budgets = []; try { budgets = JSON.parse(localStorage.getItem(BKEY)) || []; } catch {}
-function saveBudgets() { try { localStorage.setItem(BKEY, JSON.stringify(budgets)); } catch {} }
+function saveBudgets() { try { localStorage.setItem(BKEY, JSON.stringify(budgets)); } catch {} if (typeof touchMeta === "function") touchMeta("budgets"); }
 let budView = null, bm = { id: null, cats: [] };
 
 function budStats(b, monthDate) {
@@ -1388,7 +1424,131 @@ $("qScan").innerHTML = svg("qr", 2) + "掃描發票";
 $("qBud").innerHTML = svg("target", 2) + "預算";
 $("scanBtn").innerHTML = svg("qr", 2);
 
+// ── 雲端同步（存在你自己 GitHub 帳號的私人 Gist） ──
+const SYNC_FILE = "xiaoqianbao.json";
+const now = () => Date.now();
+let deleted = {}; try { deleted = JSON.parse(localStorage.getItem("wallet-deleted")) || {}; } catch {}
+let metaU = { budgets: 0, cats: 0, start: 0 }; try { metaU = Object.assign(metaU, JSON.parse(localStorage.getItem("wallet-meta-u")) || {}); } catch {}
+let sync = { token: "", gist: "", last: 0, err: "" };
+try { sync = Object.assign(sync, JSON.parse(localStorage.getItem("wallet-sync")) || {}); } catch {}
+const saveSyncCfg = () => { try { localStorage.setItem("wallet-sync", JSON.stringify(sync)); } catch {} };
+const saveDeleted = () => { try { localStorage.setItem("wallet-deleted", JSON.stringify(deleted)); } catch {} };
+const touchMeta = (k) => { metaU[k] = now(); try { localStorage.setItem("wallet-meta-u", JSON.stringify(metaU)); } catch {} schedulePush(); };
+
+function localDoc() {
+  return { app: "xiaoqianbao", v: 1, records, deleted,
+    budgets: { u: metaU.budgets, data: budgets }, cats: { u: metaU.cats, data: customCats }, start: { u: metaU.start, data: startBal } };
+}
+function mergeDocs(a, b) {
+  const del = { ...(a.deleted || {}) };
+  Object.entries(b.deleted || {}).forEach(([id, t]) => { if (!del[id] || t > del[id]) del[id] = t; });
+  const map = new Map();
+  [...(a.records || []), ...(b.records || [])].forEach((r) => {
+    if (!r || !r.id) return;
+    const cur = map.get(r.id);
+    if (!cur || (r.u || r.ts || 0) > (cur.u || cur.ts || 0)) map.set(r.id, r);
+  });
+  const recs = [...map.values()].filter((r) => !(del[r.id] && del[r.id] >= (r.u || r.ts || 0)));
+  const pick = (k) => ((b[k] && b[k].u) || 0) > ((a[k] && a[k].u) || 0) ? b[k] : (a[k] || b[k]);
+  return { app: "xiaoqianbao", v: 1, records: recs, deleted: del, budgets: pick("budgets"), cats: pick("cats"), start: pick("start") };
+}
+function applyDoc(d) {
+  records = d.records; save(false);
+  deleted = d.deleted; saveDeleted();
+  if (d.budgets) { budgets = d.budgets.data || []; metaU.budgets = d.budgets.u || 0; try { localStorage.setItem(BKEY, JSON.stringify(budgets)); } catch {} }
+  if (d.cats) {
+    customCats = d.cats.data && d.cats.data.out ? d.cats.data : { out: [], in: [] }; metaU.cats = d.cats.u || 0;
+    CATS.out = BASE_CATS.out.slice(); CATS.in = BASE_CATS.in.slice(); applyCustom();
+    try { localStorage.setItem(CKEY, JSON.stringify(customCats)); } catch {}
+  }
+  if (d.start) { startBal = +d.start.data || 0; metaU.start = d.start.u || 0; try { localStorage.setItem("wallet-start", String(startBal)); } catch {} }
+  try { localStorage.setItem("wallet-meta-u", JSON.stringify(metaU)); } catch {}
+}
+const sameDoc = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+
+async function gh(path, opt = {}) {
+  const res = await fetch("https://api.github.com" + path, { ...opt, cache: "no-store",
+    headers: { Authorization: "Bearer " + sync.token, Accept: "application/vnd.github+json", ...(opt.body ? { "Content-Type": "application/json" } : {}) } });
+  if (res.status === 401) throw new Error("金鑰無效或已過期");
+  if (!res.ok) throw new Error("GitHub 回應錯誤 " + res.status);
+  return res.json();
+}
+async function readGist(g) {
+  const f = g.files && g.files[SYNC_FILE];
+  if (!f) return null;
+  const text = f.truncated ? await (await fetch(f.raw_url, { cache: "no-store" })).text() : f.content;
+  try { return JSON.parse(text); } catch { return null; }
+}
+async function findOrCreateGist() {
+  for (let page = 1; page <= 5; page++) {
+    const list = await gh(`/gists?per_page=100&page=${page}`);
+    const hit = list.find((g) => g.files && g.files[SYNC_FILE]);
+    if (hit) return hit.id;
+    if (list.length < 100) break;
+  }
+  const g = await gh("/gists", { method: "POST", body: JSON.stringify({ description: "小錢包記帳 同步資料（請勿刪除）", public: false,
+    files: { [SYNC_FILE]: { content: JSON.stringify(localDoc()) } } }) });
+  return g.id;
+}
+let syncing = false, pushTimer = null, again = false;
+async function syncNow(quiet = true) {
+  if (!sync.token) return;
+  if (syncing) { again = true; return; }
+  syncing = true; showSyncState("同步中…");
+  try {
+    if (!sync.gist) { sync.gist = await findOrCreateGist(); saveSyncCfg(); }
+    const g = await gh("/gists/" + sync.gist);
+    const remote = (await readGist(g)) || { records: [], deleted: {} };
+    const merged = mergeDocs(localDoc(), remote);
+    if (!sameDoc(merged, localDoc())) { applyDoc(merged); render(); if ($("bud").classList.contains("open")) renderBud(); }
+    if (!sameDoc(merged, remote)) await gh("/gists/" + sync.gist, { method: "PATCH", body: JSON.stringify({ files: { [SYNC_FILE]: { content: JSON.stringify(merged) } } }) });
+    sync.last = now(); sync.err = ""; saveSyncCfg();
+    if (!quiet) toast("同步完成");
+  } catch (e) {
+    sync.err = e.message || "同步失敗"; saveSyncCfg();
+    if (e.message === "GitHub 回應錯誤 404") { sync.gist = ""; saveSyncCfg(); }
+    if (!quiet) toast("同步失敗：" + sync.err);
+  }
+  syncing = false; showSyncState();
+  if (again) { again = false; syncNow(); }
+}
+function schedulePush() { if (!sync.token) return; clearTimeout(pushTimer); pushTimer = setTimeout(() => syncNow(), 1500); }
+function showSyncState(txt) {
+  const el = $("syncState"); if (!el) return;
+  if (txt) { el.textContent = txt; return; }
+  if (!sync.token) el.textContent = "未開啟";
+  else if (sync.err) el.textContent = "失敗：" + sync.err;
+  else if (sync.last) { const d = new Date(sync.last); el.textContent = `已同步 ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
+  else el.textContent = "已連線";
+}
+
+// 同步設定視窗
+function openSync() {
+  $("syncModal").classList.add("show");
+  $("syOn").hidden = !sync.token; $("syOff").hidden = !!sync.token;
+  $("syToken").value = "";
+  showSyncState();
+}
+$("syncBtn").onclick = openSync;
+$("syClose").onclick = $("syClose2").onclick = () => $("syncModal").classList.remove("show");
+$("syncModal").onclick = (e) => { if (e.target.id === "syncModal") $("syncModal").classList.remove("show"); };
+$("syConnect").onclick = async () => {
+  const t = $("syToken").value.trim();
+  if (!t) { toast("請先貼上金鑰"); return; }
+  sync = { token: t, gist: "", last: 0, err: "" }; saveSyncCfg();
+  $("syConnect").textContent = "連線中…";
+  await syncNow(true);
+  $("syConnect").textContent = "連線並同步";
+  if (sync.err) { toast("連線失敗：" + sync.err); sync.token = ""; saveSyncCfg(); return; }
+  toast("已開啟同步，其他裝置用同一把金鑰連線即可"); openSync();
+};
+$("sySyncNow").onclick = () => syncNow(false);
+$("syOff2").onclick = () => { if (!confirm("中斷這台裝置的同步？\n（資料會留在這台裝置和雲端，不會被刪除）")) return;
+  sync = { token: "", gist: "", last: 0, err: "" }; saveSyncCfg(); openSync(); toast("已中斷同步"); };
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") syncNow(); });
+window.addEventListener("online", () => syncNow());
 render();
+syncNow();
 setTimeout(() => $("splash").classList.add("hide"), 1400);
 
 // 有新版就自動換上並重新整理

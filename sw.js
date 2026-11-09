@@ -1,5 +1,5 @@
 // 離線快取：沒網路也能打開記帳
-const CACHE = "wallet-v16";
+const CACHE = "wallet-v17";
 const FILES = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
 
 self.addEventListener("install", (e) => {
@@ -17,6 +17,9 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   // 先抓最新版，沒網路才用快取
   if (e.request.method !== "GET") return;
+  const u = new URL(e.request.url);
+  // 同步用的 GitHub 連線不經過快取
+  if (u.origin !== location.origin && u.hostname !== "cdn.jsdelivr.net") return;
   e.respondWith(
     fetch(new URL(e.request.url).origin === location.origin ? new Request(e.request.url, { cache: "no-cache" }) : e.request)
       .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); return res; })
