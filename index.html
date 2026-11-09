@@ -105,8 +105,12 @@
 
   .coin svg { width: 22px; height: 22px; }
 
+  /* 打開整頁畫面時，主畫面不顯示也不捲動 */
+  body.lock { overflow: hidden; }
+  body.lock .wrap, body.lock .fab { visibility: hidden; }
+  .ana-body, .cats { overscroll-behavior: contain; }
   /* ── 記一筆：整頁 ── */
-  .add { position: fixed; inset: 0; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
+  .add { position: fixed; inset: 0; height: 100vh; height: 100dvh; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
     transform: translateY(100%); transition: transform .3s ease; visibility: hidden; }
   .add.open { transform: none; visibility: visible; }
   .add > * { width: 100%; }
@@ -172,7 +176,7 @@
   .hdr-btns { display: flex; gap: 10px; }
   .icon-btn svg { width: 20px; height: 20px; color: var(--line); }
   .see-more { float: right; font-size: 13px; color: var(--line); font-weight: 600; }
-  .ana { position: fixed; inset: 0; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
+  .ana { position: fixed; inset: 0; height: 100vh; height: 100dvh; z-index: 30; background: var(--bg); display: flex; flex-direction: column;
     transform: translateX(100%); transition: transform .3s ease; visibility: hidden; }
   .ana.open { transform: none; visibility: visible; }
   .ana .seg button { width: 104px; font-size: 15px; letter-spacing: 1px; }
@@ -414,7 +418,7 @@
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 14</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 15</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -833,10 +837,11 @@ function openAdd(rec, preset) {
   $("delBtn").style.display = rec ? "" : "none";
   $("scanBtn").style.display = rec ? "none" : "";
   renderCats(); showExpr(); showDate();
-  $("add").classList.add("open"); $("add").setAttribute("aria-hidden", "false");
+  $("add").classList.add("open"); $("add").setAttribute("aria-hidden", "false"); syncLock();
   $("cats").scrollTop = 0;
 }
-function closeAdd() { $("add").classList.remove("open"); $("add").setAttribute("aria-hidden", "true"); document.activeElement.blur(); }
+function syncLock() { document.body.classList.toggle("lock", ["add", "ana", "bud"].some((id) => $(id).classList.contains("open"))); }
+function closeAdd() { $("add").classList.remove("open"); $("add").setAttribute("aria-hidden", "true"); syncLock(); document.activeElement.blur(); }
 
 function submit() {
   const amount = calc(expr);
@@ -970,10 +975,10 @@ function openAna(kind, d) {
   ana.anchor = new Date(base.getFullYear(), base.getMonth(), 1);
   ana.open = null; ana.act = null; ana.sel = null;
   renderAna();
-  $("ana").classList.add("open"); $("ana").setAttribute("aria-hidden", "false");
+  $("ana").classList.add("open"); $("ana").setAttribute("aria-hidden", "false"); syncLock();
   $("anaBody").scrollTop = 0;
 }
-function closeAna() { $("ana").classList.remove("open"); $("ana").setAttribute("aria-hidden", "true"); }
+function closeAna() { $("ana").classList.remove("open"); $("ana").setAttribute("aria-hidden", "true"); syncLock(); }
 
 function renderAna() {
   document.querySelectorAll("#anaSeg button").forEach((b) => b.classList.toggle("on", b.dataset.v === ana.kind));
@@ -1115,7 +1120,7 @@ function netView() {
     ${data.map((m, i) => `<tr data-m="${i}" class="${i === ana.sel ? "sel" : ""}"><td>${m.d.getFullYear() !== ana.anchor.getFullYear() ? m.d.getFullYear() + "/" : ""}${m.d.getMonth() + 1} 月</td>
       <td>${m.n ? money(m.inc) : "—"}</td><td>${m.n ? money(m.exp) : "—"}</td>
       <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? sign(m.inc - m.exp) : "—"}</td>
-      <td class="${cumulativeTo(m.d) < 0 ? "neg" : ""}">${short(cumulativeTo(m.d))}</td></tr>`).join("")}
+      <td class="${cumulativeTo(m.d) < 0 ? "neg" : ""}">${sign(cumulativeTo(m.d))}</td></tr>`).join("")}
     </tbody></table>
   </div>`;
 }
@@ -1194,9 +1199,9 @@ function miniBudget() {
 function openBud() {
   budView = new Date(view.getFullYear(), view.getMonth(), 1);
   renderBud();
-  $("bud").classList.add("open"); $("bud").setAttribute("aria-hidden", "false");
+  $("bud").classList.add("open"); $("bud").setAttribute("aria-hidden", "false"); syncLock();
 }
-function closeBud() { $("bud").classList.remove("open"); $("bud").setAttribute("aria-hidden", "true"); render(); }
+function closeBud() { $("bud").classList.remove("open"); $("bud").setAttribute("aria-hidden", "true"); syncLock(); render(); }
 
 function renderBud() {
   const d = budView, di = daysInfo(d);

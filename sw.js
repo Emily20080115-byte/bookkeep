@@ -1,5 +1,5 @@
 // 離線快取：沒網路也能打開記帳
-const CACHE = "wallet-v15";
+const CACHE = "wallet-v16";
 const FILES = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
 
 self.addEventListener("install", (e) => {
