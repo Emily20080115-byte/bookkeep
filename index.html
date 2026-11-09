@@ -131,6 +131,10 @@
   .on .ic::before, .ic.dot::before { transform: scale(1); }
   .ic[style*="--dot"]::before { background: var(--dot); }
   .cats button.on { font-weight: 700; }
+  .cats button.newcat { color: var(--muted); }
+  .cats button.newcat .ic { border: 2px dashed #C9C3B8; border-radius: 12px; width: 44px; height: 44px; }
+  .cats button.newcat .ic svg { width: 26px; height: 26px; }
+  .cats button[data-custom] { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
 
   /* 下方輸入區 */
   .entry { border-top: 2.5px solid var(--ink); background: #fff; }
@@ -396,7 +400,7 @@
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
     <button id="startBtn">設定起始金額</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 9</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 10</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -559,6 +563,25 @@ const P = {
   pieico:  "M12 3a9 9 0 1 0 9 9h-9zM15 3.5A9 9 0 0 1 20.5 9H15z",
   sort:    "M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4",
   plus:    "M12 5v14M5 12h14",
+  paw:     "M8 10.5a1.8 2.3 0 1 0 0-.01zM16 10.5a1.8 2.3 0 1 0 0-.01zM5 14a1.6 2 0 1 0 0-.01zM19 14a1.6 2 0 1 0 0-.01zM12 13c-2.5 0-4.5 3-4.5 5a2 2 0 0 0 2.5 2c1-.3 1.4-.6 2-.6s1 .3 2 .6a2 2 0 0 0 2.5-2c0-2-2-5-4.5-5z",
+  shirt:   "M8 3 3 6l2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z",
+  scissors:"M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.1 7.9 20 18M8.1 16.1 20 6",
+  sparkle: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z",
+  dumbbell:"M3 9v6M6 6v12M18 6v12M21 9v6M6 12h12",
+  plane:   "M10 13 3 11l1-2 7 1 4-6h2l-2 7 5 1 1-2h1.5l-.5 4-4 1-5 1-1.5 6H10l1-6z",
+  shield:  "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4",
+  receipt: "M6 3h12v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21zM9 8h6M9 12h6M9 16h3",
+  fuel:    "M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M6 9h6M14 10h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V9l-3-3",
+  car:     "M5 16l1.5-5.5A2 2 0 0 1 8.4 9h7.2a2 2 0 0 1 1.9 1.5L19 16M3 16h18v3H3zM7 19v2M17 19v2M7 13.5h.01M17 13.5h.01",
+  film:    "M4 4h16v16H4zM8 4v16M16 4v16M4 8h4M4 12h4M4 16h4M16 8h4M16 12h4M16 16h4",
+  music:   "M9 18V5l11-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM20 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z",
+  apple:   "M12 7c-1-2-4-2.5-6-1-2.5 2-2 7 0 10 1.5 2.5 3 4 4.5 4 .8 0 1-.5 1.5-.5s.7.5 1.5.5c1.5 0 3-1.5 4.5-4 2-3 2.5-8 0-10-2-1.5-5-1-6 1zM12 7c0-2 1-3.5 3-4",
+  bolt:    "M13 2 4 14h7l-1 8 9-12h-7z",
+  drop:    "M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z",
+  heart:   "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z",
+  clock:   "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2",
+  ticket:  "M3 8a2 2 0 0 0 0 4v-4zM3 7h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4zM14 7v10",
+  play:    "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM10 8.5v7l6-3.5z",
   target:  "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11.5v1",
   qr:      "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2h-2zM7 7h.01M17 7h.01M7 17h.01",
   menu:    "M4 6h16M4 12h12M4 18h8",
@@ -569,7 +592,7 @@ const P = {
   eye:     "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
   eyeoff:  "M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"
 };
-const svg = (k, w = 2) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${["more"].includes(k) ? 3.2 : w}" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k]}"/></svg>`;
+const svg = (k, w = 2) => k.startsWith("txt:") ? `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="${w}"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" stroke="none" style="font-family:-apple-system,'PingFang TC','Noto Sans TC',sans-serif">${escapeHtml(k.slice(4, 5))}</text></svg>` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${["more"].includes(k) ? 3.2 : w}" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k]}"/></svg>`;
 
 const CATS = {
   out: [["早餐","bfast"],["午餐","lunch"],["晚餐","dinner"],["飲品","drink"],["點心","snack"],["交通","bus"],["購物","bag"],["日用品","cart"],
@@ -595,7 +618,50 @@ function mealByTime(d = new Date()) {
   if (h >= 17 && h < 21) return "晚餐";
   return "點心";
 }
-const iconOf = (cat) => svg((CATS.out.concat(CATS.in).find((c) => c[0] === cat) || [0, LEGACY[cat] || "more"])[1]);
+// ── 自訂分類 ──
+const CKEY = "wallet-cats-v1";
+let customCats = { out: [], in: [] };
+try { const c = JSON.parse(localStorage.getItem(CKEY)); if (c && c.out && c.in) customCats = c; } catch {}
+const FOOD_RE = /餐|飯|吃|食|麵|便當|宵夜|零食|甜點|咖啡|茶|飲|水果|點心|早午餐|小吃|滷味|鹹酥雞|雞排|火鍋|燒烤|炸/;
+const ICON_RULES = [
+  [/寵物|貓|狗|飼料/, "paw"], [/衣|服|鞋|褲|裙|帽|包包/, "shirt"], [/剪髮|理髮|髮/, "scissors"], [/美|妝|保養|指甲|香水/, "sparkle"],
+  [/運動|健身|球|游泳|瑜珈|跑步/, "dumbbell"], [/旅|機票|飯店|住宿|出國/, "plane"], [/保險/, "shield"], [/稅|罰|規費/, "receipt"],
+  [/加油|油錢/, "fuel"], [/車|停車|保養廠/, "car"], [/電影|影城|追劇/, "film"], [/音樂|演唱|KTV|唱歌/, "music"],
+  [/水果|蔬菜|菜|超市|雜貨/, "apple"], [/電費|電/, "bolt"], [/水費|瓦斯/, "drop"], [/捐|慈善|愛心|奉獻/, "heart"],
+  [/打工|兼職|家教|時薪/, "clock"], [/彩券|中獎|樂透/, "ticket"], [/訂閱|會員|Netflix|Spotify|YouTube/i, "play"],
+  [/咖啡|茶|飲/, "drink"], [/宵夜|零食|甜點|點心|滷味|鹹酥雞|雞排|燒烤|炸/, "snack"], [/早餐|早午餐/, "bfast"], [/餐|飯|吃|食|麵|便當|小吃|火鍋/, "dinner"],
+  [/書|課|補習|文具|學/, "book"], [/遊戲|玩|娛樂/, "game"], [/手機|電話|網路|通訊/, "phone"], [/醫|藥|看診|牙/, "med"],
+  [/房|租|家|宿舍/, "home"], [/交通|捷運|公車|計程車|高鐵|火車|機車/, "bus"], [/禮|生日|送/, "gift"], [/購|買|網購/, "bag"],
+  [/薪|工資/, "salary"], [/獎/, "bonus"], [/投資|股|利息|基金|股利/, "invest"], [/紅包/, "redenv"], [/退/, "refund"], [/零用/, "pocket"]
+];
+const EXTRA_COLORS = ["#0E8FB0", "#B8338A", "#4F7A28", "#9B59B6", "#C99A06", "#3B6E8F", "#C0567A", "#5E8C7A"];
+function guessIcon(name) { for (const [re, k] of ICON_RULES) if (re.test(name)) return k; return "txt:" + name.trim().charAt(0); }
+function applyCustom() {
+  ["out", "in"].forEach((t) => customCats[t].forEach((c) => {
+    if (!CATS[t].some((x) => x[0] === c.name)) CATS[t].push([c.name, c.icon, true]);
+    if (c.food) { if (!FOOD_CATS.includes(c.name)) FOOD_CATS.push(c.name); } else CAT_COLOR[c.name] = c.color;
+  }));
+}
+applyCustom();
+function saveCustom() { try { localStorage.setItem(CKEY, JSON.stringify(customCats)); } catch {} }
+function addCustomCat(type) {
+  let name = prompt(type === "out" ? "新增支出分類（最多 6 個字）\n例如：寵物、剪髮、保險" : "新增收入分類（最多 6 個字）\n例如：打工、股利", "");
+  if (name === null) return null;
+  name = name.replace(/[<>"'&:]/g, "").trim().slice(0, 6);
+  if (!name) { toast("請輸入名稱"); return null; }
+  if (CATS.out.concat(CATS.in).some((c) => c[0] === name)) { toast(`已經有「${name}」了`); return name; }
+  const food = type === "out" && FOOD_RE.test(name);
+  const used = customCats.out.concat(customCats.in).filter((c) => !c.food).length;
+  const c = { name, icon: guessIcon(name), food, color: food ? C_FOOD : EXTRA_COLORS[used % EXTRA_COLORS.length] };
+  customCats[type].push(c); saveCustom(); applyCustom();
+  toast(`已新增「${name}」`);
+  return name;
+}
+function removeCustomCat(type, name) {
+  customCats[type] = customCats[type].filter((c) => c.name !== name); saveCustom();
+  CATS[type] = CATS[type].filter((c) => c[0] !== name);
+}
+const iconOf = (cat) => svg((CATS.out.concat(CATS.in).find((c) => c[0] === cat) || [0, LEGACY[cat] || (cat === "其他" ? "more" : guessIcon(cat))])[1]);
 
 const KEY = "wallet-records-v1";
 const $ = (id) => document.getElementById(id);
@@ -731,8 +797,9 @@ function shiftDay(n) { const d = parse(form.date); d.setDate(d.getDate() + n); f
 
 // ── 分類與常用備註 ──
 function renderCats() {
-  $("cats").innerHTML = CATS[form.type].map(([n, k]) =>
-    `<button data-c="${n}" class="${n === form.cat ? "on" : ""}"><span class="ic" style="--dot:${colorOf(n)}">${svg(k, 1.8)}</span>${n}</button>`).join("");
+  $("cats").innerHTML = CATS[form.type].map(([n, k, custom]) =>
+    `<button data-c="${n}" ${custom ? 'data-custom="1"' : ""} class="${n === form.cat ? "on" : ""}"><span class="ic" style="--dot:${colorOf(n)}">${svg(k, 1.8)}</span>${n}</button>`).join("") +
+    `<button data-new="1" class="newcat"><span class="ic">${svg("plus", 1.8)}</span>新增分類</button>`;
   document.querySelectorAll("#seg button").forEach((b) => b.classList.toggle("on", b.dataset.t === form.type));
   $("selIc").innerHTML = iconOf(form.cat); $("selIc").style.setProperty("--dot", colorOf(form.cat));
   const notes = [];
@@ -777,7 +844,29 @@ $("backKey").innerHTML = svg("del", 2.2);
 $("addBtn").onclick = () => openAdd();
 $("backBtn").onclick = closeAdd;
 $("seg").onclick = (e) => { const t = e.target.dataset.t; if (!t || t === form.type) return; form.type = t; if (!CATS[t].some((c) => c[0] === form.cat)) form.cat = t === "out" ? mealByTime() : CATS[t][0][0]; renderCats(); };
-$("cats").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; form.cat = b.dataset.c; renderCats(); };
+let lpTimer = null, lpFired = false;
+$("cats").onclick = (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (lpFired) { lpFired = false; return; }
+  if (b.dataset.new) { const n = addCustomCat(form.type); if (n) form.cat = n; renderCats(); return; }
+  form.cat = b.dataset.c; renderCats();
+};
+// 長按自訂分類可以刪除
+$("cats").addEventListener("pointerdown", (e) => {
+  const b = e.target.closest("button[data-custom]"); if (!b) return;
+  lpFired = false;
+  lpTimer = setTimeout(() => {
+    lpFired = true;
+    const n = b.dataset.c;
+    if (confirm(`刪除分類「${n}」？\n已經記的帳不會被刪掉。`)) {
+      removeCustomCat(form.type, n);
+      if (form.cat === n) form.cat = form.type === "out" ? mealByTime() : CATS.in[0][0];
+      renderCats(); toast(`已刪除「${n}」`);
+    }
+  }, 650);
+});
+["pointerup", "pointerleave", "pointercancel"].forEach((ev) => $("cats").addEventListener(ev, () => clearTimeout(lpTimer)));
+$("cats").addEventListener("contextmenu", (e) => { if (e.target.closest("button[data-custom]")) e.preventDefault(); });
 $("chips").onclick = (e) => { const b = e.target.closest("button"); if (b) $("note").value = b.textContent; };
 $("note").addEventListener("keydown", (e) => { if (e.key === "Enter") e.target.blur(); });
 $("pad").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) press(b.dataset.k); });
