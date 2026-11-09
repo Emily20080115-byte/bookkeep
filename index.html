@@ -125,10 +125,11 @@
     gap: 4px 0; padding: 14px 10px; -webkit-overflow-scrolling: touch; }
   .cats button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0; font-size: 14px; color: var(--ink); }
   .ic { position: relative; width: 40px; height: 40px; display: grid; place-items: center; }
-  .ic svg { position: relative; width: 34px; height: 34px; }
+  .ic svg { position: relative; z-index: 1; width: 34px; height: 34px; }
   .ic::before { content: ""; position: absolute; right: -2px; bottom: -2px; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--orange); transform: scale(0); transition: transform .15s; }
+    background: var(--orange); transform: scale(0); transition: transform .15s; z-index: 0; opacity: .85; }
   .on .ic::before, .ic.dot::before { transform: scale(1); }
+  .ic[style*="--dot"]::before { background: var(--dot); }
   .cats button.on { font-weight: 700; }
 
   /* 下方輸入區 */
@@ -262,6 +263,51 @@
   .fab { background: var(--orange-deep) !important; border: 2.5px solid var(--ink) !important; box-shadow: 0 4px 12px rgba(47,62,92,.25) !important;
     color: #fff !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1; }
   .menu.left { right: auto; left: 12px; top: 56px; }
+  /* ── 分析頁（新版） ── */
+  .ana .seg button { width: 74px; font-size: 16px; }
+  .ptabs { display: flex; border-top: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); margin: 0 0 12px; }
+  .ptabs button { flex: 1; padding: 10px 0; font-weight: 700; font-size: 16px; }
+  .ptabs button.on { background: var(--orange); }
+  .pnav { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+  .pnav button { width: 30px; height: 30px; display: grid; place-items: center; }
+  .pnav button svg { width: 16px; height: 16px; }
+  .pnav .sp { flex: 1; }
+  .pnav .vt { width: 40px; height: 40px; }
+  .pnav .vt svg { width: 26px; height: 26px; }
+  .donut { position: relative; width: min(74vw, 300px); margin: 6px auto 16px; aspect-ratio: 1; }
+  .donut svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .donut path { cursor: pointer; transition: transform .15s; transform-origin: 120px 120px; }
+  .donut path.act { transform: scale(1.04); }
+  .donut .ctr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; text-align: center; }
+  .donut .ctr small { font-size: 15px; font-weight: 700; }
+  .donut .ctr b { font-size: clamp(20px, 7vw, 28px); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .donut .ctr span { font-size: 13px; color: var(--muted); }
+  .bcard { background: #fff; border: 2.5px solid var(--ink); border-radius: 20px; margin-bottom: 16px; overflow: hidden; }
+  .lg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; padding: 16px 18px; }
+  .lg-grid div { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; min-width: 0; }
+  .lg-grid i { width: 18px; height: 18px; border-radius: 4px; flex: none; border: 1.5px solid var(--ink); }
+  .lg-grid span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lg-grid em { font-style: normal; font-variant-numeric: tabular-nums; }
+  .bcard .bh { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 17px; }
+  .bcard .bh button { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .bcard .bh button svg { width: 20px; height: 20px; color: var(--ink); }
+  .krow { width: 100%; text-align: left; display: block; padding: 13px 18px; border-top: 1px solid #EEE8DD; }
+  .krow:first-child { border-top: 0; }
+  .krow .top { display: flex; align-items: center; gap: 14px; }
+  .krow .ic svg { width: 30px; height: 30px; }
+  .krow .nm { flex: 1; font-weight: 600; font-size: 16px; }
+  .krow .rt { text-align: right; }
+  .krow .rt b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .krow .rt small { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .good { color: #2E8A5A; } .bad { color: var(--expense); } .flat { color: var(--muted); }
+  .krow .detail { display: none; margin: 10px 0 0 44px; background: #FAF6ED; border-radius: 12px; padding: 4px 12px; }
+  .krow.open .detail { display: block; }
+  .hbars { padding: 6px 18px 12px; }
+  .hb { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 14px; }
+  .hb .n { width: 56px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .hb .t { flex: 1; height: 14px; background: #F1ECE2; border-radius: 4px; overflow: hidden; }
+  .hb .t i { display: block; height: 100%; border-radius: 0 4px 4px 0; }
+  .hb .v { width: 80px; text-align: right; font-variant-numeric: tabular-nums; }
   .menu { position: absolute; right: 16px; top: 62px; background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(62,90,140,.18);
     padding: 6px; z-index: 25; display: none; min-width: 150px; }
   .menu.show { display: block; }
@@ -292,7 +338,7 @@
   <div class="menu left" id="menu">
     <button id="exportBtn">匯出備份</button>
     <button id="importBtn">匯入備份</button>
-    <button disabled style="color:var(--muted);font-size:12px">版本 6</button>
+    <button disabled style="color:var(--muted);font-size:12px">版本 7</button>
     <button id="clearBtn" style="color:var(--expense)">清除全部資料</button>
   </div>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -369,8 +415,9 @@
   <div class="topbar">
     <button class="tb" id="anaBack" aria-label="返回"></button>
     <div class="seg" id="anaSeg">
-      <button data-v="month" class="on">每月收支</button>
-      <button data-v="cat">支出細項</button>
+      <button data-v="out" class="on">支出</button>
+      <button data-v="in">收入</button>
+      <button data-v="net">結餘</button>
     </div>
     <span class="tb"></span>
   </div>
@@ -409,6 +456,9 @@ const P = {
   right:   "M9 5l7 7-7 7",
   cal:     "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01",
   del:     "M9 6h11v12H9l-6-6zM12 10l4 4M16 10l-4 4",
+  barsico: "M4 20h16M6 20V11h4v9M10 20V5h4v15M14 20v-7h4v7",
+  pieico:  "M12 3a9 9 0 1 0 9 9h-9zM15 3.5A9 9 0 0 1 20.5 9H15z",
+  sort:    "M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4",
   menu:    "M4 6h16M4 12h12M4 18h8",
   flame:   "M12 3c.5 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2.4 1.3-3.9 2.4-4.9.4 1.8 1.3 2.9 2.4 2.9-.6-3-.3-5.8.2-8.5z",
   caret:   "M5 8h14l-7 9z",
@@ -623,8 +673,8 @@ $("coinIc").innerHTML = svg("coins");
 $("monthInput").addEventListener("change", (e) => { if (!e.target.value) return; const [y, m] = e.target.value.split("-").map(Number); view = new Date(y, m - 1, 1); render(); });
 $("eyeBtn").onclick = () => { hide = !hide; try { localStorage.setItem("wallet-hide", hide ? "1" : "0"); } catch {} render(); };
 $("streak").onclick = () => toast(`已連續記帳 ${streakDays()} 天，繼續加油！`);
-$("goOut").onclick = () => openAna("cat", view);
-$("goIn").onclick = () => openAna("month", view);
+$("goOut").onclick = () => openAna("out", view);
+$("goIn").onclick = () => openAna("in", view);
 // 左右滑動切換月份
 let sx = null, sy = 0;
 $("swipeArea").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
@@ -656,17 +706,33 @@ $("clearBtn").onclick = () => { if (confirm("真的要清除全部紀錄嗎？�
 
 // ── 分析 ──
 const C_IN = "#5B7BB8", C_OUT = "#E5814F";
-let ana = { view: "month", year: new Date().getFullYear(), sel: new Date().getMonth(), ym: null, open: null };
+const PAL = ["#eb6834", "#2a78d6", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6"], C_OTHER = "#A8A39A";
+let ana = { kind: "out", period: "m", anchor: null, chart: "donut", sort: "desc", open: null, act: null, sel: null };
 const sum = (rows, t) => rows.filter((r) => r.type === t).reduce((s, r) => s + r.amount, 0);
 const ymKey = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
 const short = (n) => n >= 10000 ? (Math.round(n / 1000) / 10) + "萬" : Math.round(n).toLocaleString("zh-TW");
 function niceMax(v) { if (v <= 0) return 1000; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+const addM = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, 1);
 
-function openAna(v, ymDate) {
-  ana.view = v || "month";
-  if (ymDate) { ana.ym = new Date(ymDate.getFullYear(), ymDate.getMonth(), 1); ana.year = ymDate.getFullYear(); ana.sel = ymDate.getMonth(); }
-  if (!ana.ym) ana.ym = new Date(view.getFullYear(), view.getMonth(), 1);
-  ana.open = null;
+// 期間：回傳月份清單（第一天）
+function periodMonths(anchor, period) {
+  if (period === "y") return Array.from({ length: 12 }, (_, i) => new Date(anchor.getFullYear(), i, 1));
+  const n = period === "6m" ? 6 : 1;
+  return Array.from({ length: n }, (_, i) => addM(anchor, i - n + 1));
+}
+const prevAnchor = (a, p) => p === "y" ? new Date(a.getFullYear() - 1, a.getMonth(), 1) : addM(a, p === "6m" ? -6 : -1);
+function periodLabel(a, p) {
+  if (p === "y") return `${a.getFullYear()} 年`;
+  if (p === "m") return `${a.getFullYear()} 年 ${a.getMonth() + 1} 月`;
+  const s = addM(a, -5); return `${s.getFullYear()}/${s.getMonth() + 1} – ${a.getFullYear()}/${a.getMonth() + 1}`;
+}
+const inMonths = (ms) => { const keys = new Set(ms.map(ymKey)); return records.filter((r) => keys.has(r.date.slice(0, 7))); };
+
+function openAna(kind, d) {
+  ana.kind = kind || "out";
+  const base = d || view;
+  ana.anchor = new Date(base.getFullYear(), base.getMonth(), 1);
+  ana.open = null; ana.act = null; ana.sel = null;
   renderAna();
   $("ana").classList.add("open"); $("ana").setAttribute("aria-hidden", "false");
   $("anaBody").scrollTop = 0;
@@ -674,123 +740,140 @@ function openAna(v, ymDate) {
 function closeAna() { $("ana").classList.remove("open"); $("ana").setAttribute("aria-hidden", "true"); }
 
 function renderAna() {
-  document.querySelectorAll("#anaSeg button").forEach((b) => b.classList.toggle("on", b.dataset.v === ana.view));
-  $("anaBody").innerHTML = ana.view === "month" ? monthView() : catView();
+  document.querySelectorAll("#anaSeg button").forEach((b) => b.classList.toggle("on", b.dataset.v === ana.kind));
+  const head = `
+  <div class="ptabs">${[["m", "月"], ["6m", "近 6 個月"], ["y", "年"]].map(([k, t]) => `<button data-p="${k}" class="${ana.period === k ? "on" : ""}">${t}</button>`).join("")}</div>
+  <div class="pnav"><button data-nav="-1" aria-label="上一期">${svg("left", 3)}</button><span>${periodLabel(ana.anchor, ana.period)}</span>
+    <button data-nav="1" aria-label="下一期">${svg("right", 3)}</button><span class="sp"></span>
+    ${ana.kind !== "net" ? `<button class="vt" data-vt="1" aria-label="切換圖表">${svg(ana.chart === "donut" ? "barsico" : "pieico", 2)}</button>` : ""}</div>`;
+  $("anaBody").innerHTML = head + (ana.kind === "net" ? netView() : catView2());
 }
 
-function monthView() {
-  const y = ana.year;
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const rows = records.filter((r) => r.date.startsWith(`${y}-${pad2(i + 1)}`));
-    return { i, n: rows.length, inc: sum(rows, "in"), exp: sum(rows, "out") };
-  });
-  const yi = months.reduce((s, m) => s + m.inc, 0), ye = months.reduce((s, m) => s + m.exp, 0);
-  const active = months.filter((m) => m.n).length;
-  const max = niceMax(Math.max(...months.map((m) => Math.max(m.inc, m.exp))));
-  // 長條圖
-  const W = 340, H = 170, L = 34, B = 20, T = 8, gw = (W - L) / 12, bw = Math.min(9, gw / 2 - 2);
-  const yy = (v) => T + (H - T - B) * (1 - v / max);
-  const bar = (x, v, c) => {
-    if (v <= 0) return "";
-    const top = yy(v), h = (H - B) - top, r = Math.min(3, h);
-    return `<path d="M${x},${H - B}V${top + r}q0,-${r} ${r},-${r}h${bw - 2 * r}q${r},0 ${r},${r}V${H - B}z" fill="${c}"/>`;
+function catView2() {
+  const type = ana.kind, word = type === "out" ? "支出" : "收入";
+  const rows = inMonths(periodMonths(ana.anchor, ana.period)).filter((r) => r.type === type);
+  const prevRows = inMonths(periodMonths(prevAnchor(ana.anchor, ana.period), ana.period)).filter((r) => r.type === type);
+  const total = rows.reduce((s, r) => s + r.amount, 0);
+  const by = {};
+  rows.forEach((r) => (by[r.cat] = by[r.cat] || []).push(r));
+  let cats = Object.entries(by).map(([c, list]) => ({ c, list, v: list.reduce((s, r) => s + r.amount, 0),
+    pv: prevRows.filter((r) => r.cat === c).reduce((s, r) => s + r.amount, 0) })).sort((a, b) => b.v - a.v);
+  cats.forEach((x, i) => x.color = i < 7 ? PAL[i] : C_OTHER);
+  // 圖表用：第 8 名以後合併成「其他（合併）」
+  let segs = cats.slice(0, 7);
+  if (cats.length > 7) segs.push({ c: "其他（合併）", v: cats.slice(7).reduce((s, x) => s + x.v, 0), color: C_OTHER, merged: true });
+  if (!total) return `<div class="bcard empty" style="padding:30px 0">這段期間沒有${word}紀錄</div>`;
+
+  let chart;
+  if (ana.chart === "donut") {
+    const R1 = 112, R0 = 62, cx = 120, cy = 120;
+    let a0 = -Math.PI / 2, paths = "";
+    const pt = (r, a) => `${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`;
+    segs.forEach((x) => {
+      const ang = x.v / total * Math.PI * 2, a1 = a0 + ang;
+      if (segs.length === 1) {
+        paths += `<path data-seg="${x.c}" d="M${pt(R1, -Math.PI/2)}A${R1},${R1} 0 1 1 ${pt(R1, Math.PI*1.5 - 0.0001)}ZM${pt(R0, -Math.PI/2)}A${R0},${R0} 0 1 0 ${pt(R0, Math.PI*1.5 - 0.0001)}Z" fill-rule="evenodd" fill="${x.color}" stroke="var(--ink)" stroke-width="2.5"/>`;
+      } else {
+        const big = ang > Math.PI ? 1 : 0;
+        paths += `<path data-seg="${x.c}" class="${ana.act === x.c ? "act" : ""}" d="M${pt(R1, a0)}A${R1},${R1} 0 ${big} 1 ${pt(R1, a1)}L${pt(R0, a1)}A${R0},${R0} 0 ${big} 0 ${pt(R0, a0)}Z"
+          fill="${x.color}" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>`;
+      }
+      a0 = a1;
+    });
+    const act = segs.find((x) => x.c === ana.act);
+    chart = `<div class="donut"><svg viewBox="0 0 240 240" role="img" aria-label="${word}分類圓餅圖">${paths}</svg>
+      <div class="ctr">${act ? `<small>${act.c}</small><b>${money(act.v)}</b><span>${(act.v / total * 100).toFixed(1)}%</span>`
+        : `<small>總${word}</small><b>${money(total)}</b>`}</div></div>`;
+  } else {
+    const max = cats[0].v;
+    chart = `<div class="bcard"><div class="bh">總${word}　${money(total)}</div><div class="hbars">${cats.map((x) =>
+      `<div class="hb"><span class="n">${x.c}</span><span class="t"><i style="width:${(x.v / max * 100).toFixed(1)}%;background:${x.color}"></i></span><span class="v">${money(x.v)}</span></div>`).join("")}</div></div>`;
+  }
+  const legend = ana.chart === "donut" ? `<div class="bcard"><div class="lg-grid">${segs.map((x) =>
+    `<div><i style="background:${x.color}"></i><span>${x.c}</span><em>${(x.v / total * 100).toFixed(1)}%</em></div>`).join("")}</div></div>` : "";
+
+  const list = [...cats].sort((a, b) => ana.sort === "desc" ? b.v - a.v : a.v - b.v);
+  const chg = (x) => {
+    const d = x.v - x.pv;
+    if (!x.pv) return `<small class="flat">上期沒有</small>`;
+    if (!d) return `<small class="flat">和上期一樣</small>`;
+    const goodDir = type === "out" ? d < 0 : d > 0;
+    return `<small class="${goodDir ? "good" : "bad"}">${d > 0 ? "↑" : "↓"} ${money(Math.abs(d))}</small>`;
   };
+  const detail = `<div class="bcard"><div class="bh"><span>${word}明細</span>
+    <button data-sort="1">${ana.sort === "desc" ? "金額高到低" : "金額低到高"}${svg("sort", 2)}</button></div>
+    ${list.map((x) => `<button class="krow ${ana.open === x.c ? "open" : ""}" data-c="${x.c}">
+      <div class="top"><span class="ic dot" style="--dot:${x.color}">${iconOf(x.c)}</span><span class="nm">${x.c}</span>
+        <span class="rt"><b>${money(x.v)}</b>${chg(x)}</span></div>
+      <div class="detail">${x.list.sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts).map((r) => {
+        const dt = parse(r.date);
+        return `<div class="drow"><span class="d">${dt.getMonth() + 1}/${dt.getDate()}</span><span class="n">${r.note ? escapeHtml(r.note) : "（無備註）"}</span><span class="a">${money(r.amount)}</span></div>`;
+      }).join("")}</div></button>`).join("")}
+  </div>`;
+  return chart + legend + detail;
+}
+
+function netView() {
+  const ms = ana.period === "m" ? periodMonths(ana.anchor, "6m") : periodMonths(ana.anchor, ana.period);
+  const data = ms.map((d) => { const rows = inMonths([d]); return { d, n: rows.length, inc: sum(rows, "in"), exp: sum(rows, "out") }; });
+  const focus = ana.period === "m" ? data.filter((x) => ymKey(x.d) === ymKey(ana.anchor)) : data;
+  const ti = focus.reduce((s, x) => s + x.inc, 0), te = focus.reduce((s, x) => s + x.exp, 0);
+  if (ana.sel === null || ana.sel >= data.length) ana.sel = data.length - 1;
+  const max = niceMax(Math.max(...data.map((m) => Math.max(m.inc, m.exp))));
+  const W = 340, H = 170, L = 34, B = 20, T = 8, gw = (W - L) / data.length, bw = Math.min(14, gw / 2 - 2);
+  const yy = (v) => T + (H - T - B) * (1 - v / max);
+  const bar = (x, v, c) => { if (v <= 0) return ""; const top = yy(v), h = (H - B) - top, r = Math.min(3, h);
+    return `<path d="M${x},${H - B}V${top + r}q0,-${r} ${r},-${r}h${bw - 2 * r}q${r},0 ${r},${r}V${H - B}z" fill="${c}"/>`; };
   let g = "";
-  [0, 0.5, 1].forEach((f) => {
-    const v = max * f, yv = yy(v);
-    g += `<line x1="${L}" x2="${W}" y1="${yv}" y2="${yv}" stroke="${f ? "#EFEAE0" : "#C9C3B8"}" stroke-width="1"/>
-      <text x="${L - 5}" y="${yv + 3.5}" text-anchor="end">${short(v)}</text>`;
-  });
-  months.forEach((m) => {
-    const x0 = L + gw * m.i, cx = x0 + gw / 2;
-    if (m.i === ana.sel) g += `<rect x="${x0 + 1}" y="${T}" width="${gw - 2}" height="${H - T - B}" rx="6" fill="#FDF0E3"/>`;
+  [0, 0.5, 1].forEach((f) => { const v = max * f, yv = yy(v);
+    g += `<line x1="${L}" x2="${W}" y1="${yv}" y2="${yv}" stroke="${f ? "#EFEAE0" : "#C9C3B8"}"/><text x="${L - 5}" y="${yv + 3.5}" text-anchor="end">${short(v)}</text>`; });
+  data.forEach((m, i) => {
+    const x0 = L + gw * i, cx = x0 + gw / 2;
+    if (i === ana.sel) g += `<rect x="${x0 + 1}" y="${T}" width="${gw - 2}" height="${H - T - B}" rx="6" fill="#FDF0E3"/>`;
     g += bar(cx - bw - 1, m.inc, C_IN) + bar(cx + 1, m.exp, C_OUT);
-    g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" ${m.i === ana.sel ? 'style="fill:var(--ink);font-weight:700"' : ""}>${m.i + 1}月</text>`;
-    g += `<rect class="hit" data-m="${m.i}" x="${x0}" y="0" width="${gw}" height="${H}" fill="transparent"/>`;
+    g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" ${i === ana.sel ? 'style="fill:var(--ink);font-weight:700"' : ""}>${m.d.getMonth() + 1}月</text>`;
+    g += `<rect data-m="${i}" x="${x0}" y="0" width="${gw}" height="${H}" fill="transparent"/>`;
   });
-  const s = months[ana.sel];
-  const net = s.inc - s.exp;
+  const s = data[ana.sel], net = s.inc - s.exp, nn = ti - te;
+  const sign = (v) => (v < 0 ? "-" : "") + money(Math.abs(v));
   return `
-  <div class="month"><button data-y="-1">‹</button><span>${y} 年</span><button data-y="1">›</button></div>
-  <div class="tiles">
-    <div class="tile"><small><span class="sw" style="background:${C_IN}"></span>全年收入</small><b>${money(yi)}</b></div>
-    <div class="tile"><small><span class="sw" style="background:${C_OUT}"></span>全年支出</small><b>${money(ye)}</b></div>
-    <div class="tile"><small>全年結餘</small><b ${yi - ye < 0 ? 'class="chg-up"' : ""}>${yi - ye < 0 ? "-" : ""}${money(Math.abs(yi - ye))}</b></div>
-    <div class="tile"><small>平均每月支出</small><b>${money(active ? ye / active : 0)}</b></div>
+  <div class="tiles" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="tile"><small><span class="sw" style="background:${C_IN}"></span>收入</small><b style="font-size:17px">${money(ti)}</b></div>
+    <div class="tile"><small><span class="sw" style="background:${C_OUT}"></span>支出</small><b style="font-size:17px">${money(te)}</b></div>
+    <div class="tile"><small>結餘</small><b style="font-size:17px" class="${nn < 0 ? "bad" : ""}">${sign(nn)}</b></div>
   </div>
-  <h2>每月收入與支出</h2>
+  <h2>${ana.period === "m" ? "近 6 個月比較" : "每月收入與支出"}</h2>
   <div class="chart-card">
     <div class="legend"><span><i style="background:${C_IN}"></i>收入</span><span><i style="background:${C_OUT}"></i>支出</span></div>
-    <div class="readout"><b>${s.i + 1} 月</b>　收入 <b>${money(s.inc)}</b>　支出 <b>${money(s.exp)}</b>　結餘 <b ${net < 0 ? 'class="chg-up"' : ""}>${net < 0 ? "-" : ""}${money(Math.abs(net))}</b></div>
-    <svg viewBox="0 0 ${W} ${H}" id="mChart" role="img" aria-label="${y} 年每月收入與支出長條圖">${g}</svg>
+    <div class="readout"><b>${s.d.getFullYear()}/${s.d.getMonth() + 1}</b>　收入 <b>${money(s.inc)}</b>　支出 <b>${money(s.exp)}</b>　結餘 <b class="${net < 0 ? "bad" : ""}">${sign(net)}</b></div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="每月收入與支出長條圖">${g}</svg>
   </div>
   <h2>每月明細表</h2>
   <div class="panel" style="padding:6px 14px">
     <table class="mt"><thead><tr><th>月份</th><th>收入</th><th>支出</th><th>結餘</th></tr></thead><tbody>
-    ${months.map((m) => `<tr data-m="${m.i}" class="${m.i === ana.sel ? "sel" : ""}"><td>${m.i + 1} 月</td>
+    ${data.map((m, i) => `<tr data-m="${i}" class="${i === ana.sel ? "sel" : ""}"><td>${m.d.getFullYear() !== ana.anchor.getFullYear() ? m.d.getFullYear() + "/" : ""}${m.d.getMonth() + 1} 月</td>
       <td>${m.n ? money(m.inc) : "—"}</td><td>${m.n ? money(m.exp) : "—"}</td>
-      <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? (m.inc - m.exp < 0 ? "-" : "") + money(Math.abs(m.inc - m.exp)) : "—"}</td></tr>`).join("")}
+      <td class="${m.inc - m.exp < 0 ? "neg" : ""}">${m.n ? sign(m.inc - m.exp) : "—"}</td></tr>`).join("")}
     </tbody></table>
-  </div>`;
-}
-
-function catView() {
-  const d = ana.ym, key = ymKey(d), prevKey = ymKey(new Date(d.getFullYear(), d.getMonth() - 1, 1));
-  const rows = records.filter((r) => r.type === "out" && r.date.startsWith(key));
-  const prev = records.filter((r) => r.type === "out" && r.date.startsWith(prevKey));
-  const total = rows.reduce((s, r) => s + r.amount, 0), ptotal = prev.reduce((s, r) => s + r.amount, 0);
-  const isNow = key === ymKey(new Date());
-  const days = isNow ? new Date().getDate() : new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  const chg = (a, b) => {
-    if (!b) return a ? "上月沒有支出" : "";
-    const diff = a - b; if (!diff) return "和上月一樣";
-    const p = Math.abs(diff / b * 100), ps = p < 1 ? "不到 1" : Math.round(p);
-    return `比上月 <span class="${diff > 0 ? "chg-up" : "chg-down"}">${diff > 0 ? "▲ 多" : "▼ 少"} ${money(Math.abs(diff))}（${ps}%）</span>`;
-  };
-  const by = {};
-  rows.forEach((r) => (by[r.cat] = by[r.cat] || []).push(r));
-  const cats = Object.entries(by).map(([c, list]) => ({ c, list, v: list.reduce((s, r) => s + r.amount, 0),
-    pv: prev.filter((r) => r.cat === c).reduce((s, r) => s + r.amount, 0) })).sort((a, b) => b.v - a.v);
-  const max = cats.length ? cats[0].v : 1;
-  const top = cats[0];
-  return `
-  <div class="month"><button data-mo="-1">‹</button><span>${d.getFullYear()} 年 ${d.getMonth() + 1} 月</span><button data-mo="1">›</button></div>
-  <div class="hero">
-    <small>本月支出</small>
-    <div class="big">${money(total)}</div>
-    <div class="sub"><span>${chg(total, ptotal)}</span><span>共 <b>${rows.length}</b> 筆</span><span>日均 <b>${money(Math.round(total / days))}</b></span></div>
-    ${top ? `<div class="sub" style="margin-top:6px"><span>花最多：<b>${top.c}</b>，佔 <b>${Math.round(top.v / total * 100)}%</b></span></div>` : ""}
-  </div>
-  <h2>各分類支出 <span style="font-weight:400;font-size:12px">（點一下看明細）</span></h2>
-  <div class="panel" style="padding:4px 16px">
-  ${cats.length ? cats.map((x) => {
-    const diff = x.v - x.pv;
-    return `<button class="crow ${ana.open === x.c ? "open" : ""}" data-c="${x.c}">
-      <div class="top"><span class="emo">${iconOf(x.c)}</span><span class="nm">${x.c}</span>
-        <span class="pct">${Math.round(x.v / total * 100)}%</span><span class="am">${money(x.v)}</span></div>
-      <div class="bar"><i style="width:${(x.v / max * 100).toFixed(1)}%"></i></div>
-      <div class="meta">${x.list.length} 筆 · ${x.pv ? (diff === 0 ? "和上月一樣" : `比上月${diff > 0 ? "多" : "少"} ${money(Math.abs(diff))}`) : "上月沒有"}</div>
-      <div class="detail">${x.list.sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts).map((r) => {
-        const dt = parse(r.date);
-        return `<div class="drow"><span class="d">${dt.getMonth() + 1}/${dt.getDate()}</span><span class="n">${r.note ? escapeHtml(r.note) : "（無備註）"}</span><span class="a">${money(r.amount)}</span></div>`;
-      }).join("")}</div>
-    </button>`;
-  }).join("") : `<div class="empty">這個月還沒有支出</div>`}
   </div>`;
 }
 
 $("anaBack").innerHTML = svg("back", 2.4);
 $("anaBtn").innerHTML = svg("invest", 2.2);
-$("anaBtn").onclick = () => openAna("month");
+$("anaBtn").onclick = () => openAna("out");
 $("anaBack").onclick = closeAna;
-$("anaSeg").onclick = (e) => { const v = e.target.dataset.v; if (!v) return; ana.view = v; if (!ana.ym) ana.ym = new Date(view); renderAna(); };
+$("anaSeg").onclick = (e) => { const v = e.target.dataset.v; if (!v) return; ana.kind = v; ana.open = null; ana.act = null; renderAna(); $("anaBody").scrollTop = 0; };
 $("anaBody").addEventListener("click", (e) => {
-  const t = e.target.closest("[data-y],[data-mo],[data-m],[data-c]");
+  const t = e.target.closest("[data-p],[data-nav],[data-vt],[data-sort],[data-seg],[data-m],[data-c]");
   if (!t) return;
-  if (t.dataset.y) { ana.year += +t.dataset.y; }
-  else if (t.dataset.mo) { ana.ym = new Date(ana.ym.getFullYear(), ana.ym.getMonth() + +t.dataset.mo, 1); ana.open = null; }
-  else if (t.dataset.m !== undefined) { ana.sel = +t.dataset.m; }
-  else if (t.dataset.c) { ana.open = ana.open === t.dataset.c ? null : t.dataset.c; }
+  const ds = t.dataset;
+  if (ds.p) { ana.period = ds.p; ana.sel = null; }
+  else if (ds.nav) { ana.anchor = ana.period === "y" ? new Date(ana.anchor.getFullYear() + +ds.nav, ana.anchor.getMonth(), 1) : addM(ana.anchor, +ds.nav); ana.open = null; ana.act = null; ana.sel = null; }
+  else if (ds.vt) { ana.chart = ana.chart === "donut" ? "bar" : "donut"; }
+  else if (ds.sort) { ana.sort = ana.sort === "desc" ? "asc" : "desc"; }
+  else if (ds.seg) { ana.act = ana.act === ds.seg ? null : ds.seg; }
+  else if (ds.m !== undefined) { ana.sel = +ds.m; }
+  else if (ds.c) { ana.open = ana.open === ds.c ? null : ds.c; }
   const st = $("anaBody").scrollTop; renderAna(); $("anaBody").scrollTop = st;
 });
 
